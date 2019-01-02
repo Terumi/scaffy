@@ -1,0 +1,48 @@
+{
+  "migrations": {
+    "user": {
+      "fields": {
+        "id": {
+          "type": "increments"
+        },
+        "name": {
+          "type": "string",
+          "constraints": [
+            "notNull"
+          ],
+          "modifiers": [
+            "nullable"
+          ]
+        },
+        "email": {
+          "type": "string",
+          "constraints": [
+            "unique"
+          ]
+        },
+        "type_id": {
+          "type": "integer",
+          "constraints": [],
+          "references": {
+            "column": "id",
+            "on": "user_type",
+            "relation_type": "1-1",
+            "foreign_key": "id",
+            "relationName": "UserType"
+          },
+          "default": "0"
+        }
+      }
+    },
+    "user_type": {
+      "fields": {
+        "id": {
+          "type": "increments"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

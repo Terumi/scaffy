@@ -1,0 +1,13 @@
+#table
+#   column, type, default, constrain, references, reference_table, reference_type, special_type
+
+*user
+    id, increments
+    email, string,, notNull|unique
+    type_id, integer,, id, user_types, one_to_many
+*user_type
+    id, increments
+    type, string
+*route
+    id, increment
+    destination, integer

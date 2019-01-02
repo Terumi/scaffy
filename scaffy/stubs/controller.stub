@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Model;
+
+use Illuminate\Http\Request;
+
+class DummyController extends Controller
+{
+    public function index()
+    {
+        $model_name = Model::paginate(15);
+        return view('admin.model_name.index')->with(['items' => $model_name]);
+    }
+
+    public function create()
+    {
+        return view('admin.model_name.create');
+    }
+
+    public function store(Request $req)
+    {
+        $model_name = new Model();
+        #model_fields#
+        $model_name->save();
+
+        return redirect('admin/model_name');
+
+    }
+
+    public function edit($id)
+    {
+        $model_name = Model::findOrFail($id);
+        return view('admin.model_name.edit')->with(['item' => $model_name]);
+    }
+
+    public function update($id, Request $request)
+    {
+        $model_name = Model::findOrFail($id);
+        $model_name->update($request->except(['csrf_token']));
+        $model_name->save();
+        return redirect('admin/model_name');
+    }
+
+    public function delete(Request $req)
+    {
+        Model::find($req->get('id'))->delete();
+        return redirect('admin/model_name');
+    }
+}
