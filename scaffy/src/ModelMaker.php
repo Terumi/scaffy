@@ -8,26 +8,26 @@ class ModelMaker
 {
 
 
-    public function create_model_file($migration , $key)
+    public static function create_model_file($config)
     {
         $path = base_path('scaffy/stubs/model.stub');
         $contents = file_get_contents($path);
 
-        $key = ScaffyAssistant::makeModelName($key);
+        $key = $config['name'];
+        $modelName = $config['model_name'];
 
         //replace the class name
-        $contents = str_replace('DummyClass', $key, $contents);
+        $contents = str_replace('DummyClass', $modelName, $contents);
         //replace the table name
         $contents = str_replace('TableName', strtolower($key), $contents);
 
-        $file_name = $key . ".php";
+        $file_name = $modelName . ".php";
         Storage::disk('models')->put($file_name, $contents);
 
-        $this->add_model_relations($migration, $file_name);
-
+        self::add_model_relations($config['migration'], $file_name);
     }
 
-    public function add_model_relations($migration, string $model_file_name): void
+    protected static function add_model_relations($migration, string $model_file_name): void
     {
         $model_stub = '';
         foreach ($migration['fields'] as $field_key => $field) {
@@ -36,7 +36,7 @@ class ModelMaker
             if (!empty($field['references'])) {
                 switch ($field['references']['relation_type']) {
                     case '1-1':
-                        $model_stub .= 'public function ' . $field['references']['relationName'] . '(){return $this->hasOne(\'App\\' . ScaffyAssistant::makeModelName($field['references']['on']) . '\');}';
+                        $model_stub .= 'public function ' . $field['references']['relationName'] . '(){return $this->hasOne(\'App\\' . ScaffyAssistant::makeModelName($field['references']['on']) . '\', \''. $field['references']['column'].'\', \''. $field_key .'\');}';
                         break;
                     case '1-N':
 

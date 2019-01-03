@@ -64,8 +64,11 @@ return [
             'url' => env('AWS_URL'),
         ],
 
-        //Scaffy specific
-
+        // Scaffy Drivers
+        'config' => [
+            'driver' => 'local',
+            'root' => base_path('scaffy/config')
+        ],
         'migrations' => [
             'driver' => 'local',
             'root' => base_path('database/migrations')
@@ -77,6 +80,10 @@ return [
         'controllers' => [
             'driver' => 'local',
             'root' => base_path('app/Http/Controllers')
+        ],
+        'views' => [
+            'driver' => 'local',
+            'root' => base_path('resources/views/admin/pages')
         ],
     ],
 

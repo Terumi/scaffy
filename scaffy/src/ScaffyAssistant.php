@@ -8,4 +8,9 @@ class ScaffyAssistant
     {
         return implode('', array_map('ucfirst', explode('_', $key)));
     }
+
+    public static function makeLowerCaseModelName($key)
+    {
+        return implode('', array_map('strtolower', explode('_', $key)));
+    }
 }

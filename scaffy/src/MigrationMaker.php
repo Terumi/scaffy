@@ -7,35 +7,27 @@ use Illuminate\Support\Facades\Storage;
 class MigrationMaker
 {
 
-    public function test()
+    public static function create_migration_file($config)
     {
-        return "asd";
-    }
-
-    public function create_migration_file($migration, $key)
-    {
+        $migration = $config['migration'];
         $timestamp = date('Y_m_d_His');
-        $path = base_path('scaffy/stubs/create_migration.stub');
+        $path = base_path('scaffy/stubs/migration.stub');
         $contents = file_get_contents($path);
-        $key = implode('_', array_map('ucfirst', explode('_', $key)));
+        $key = implode('', array_map('ucfirst', explode('_', $config['name'])));
 
         //replace the class name
         $contents = str_replace('DummyClass', $key, $contents);
         //replace the table name
-        $contents = str_replace('DummyTable', strtolower($key), $contents);
+        $contents = str_replace('DummyTable', strtolower($config['name']), $contents);
 
-        $file_name = "{$timestamp}_{$key}.php";
+        $file_name = "{$timestamp}_{$key}_Migration.php";
         Storage::disk('migrations')->put($file_name, $contents);
-
-
-        $this->add_fields_to_migration_file($migration, $file_name);
-
+        self::add_fields_to_migration_file($migration, $file_name);
         //this is to ensure proper file name creation
         sleep(1);
-
     }
 
-    private function add_fields_to_migration_file($item, $file_name)
+    protected static function add_fields_to_migration_file($item, $file_name)
     {
         $table_stub = "";
         foreach ($item['fields'] as $field_key => $field) {

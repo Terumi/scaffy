@@ -11,7 +11,7 @@ class DummyController extends Controller
     public function index()
     {
         $model_name = Model::paginate(15);
-        return view('admin.model_name.index')->with(['items' => $model_name]);
+        return view('admin.pages.model_name_index')->with(['items' => $model_name]);
     }
 
     public function create()

@@ -1,0 +1,22 @@
+{
+  "name": "user_type",
+  "model_name": "UserType",
+  "migration": {
+    "fields": {
+      "id": {
+        "type": "increments"
+      },
+      "type": {
+        "type": "string"
+      }
+    }
+  },
+  "pages": {
+    "index": {
+      "shown_fields": {
+        "id": {},
+        "type": {}
+      }
+    }
+  }
+}

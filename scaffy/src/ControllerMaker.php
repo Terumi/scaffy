@@ -7,26 +7,27 @@ use Illuminate\Support\Facades\Storage;
 class ControllerMaker
 {
 
-    public function create_controller_files($migration, $key)
+    public static function create_controller_files($config)
     {
 
         $path = base_path('scaffy/stubs/controller.stub');
         $contents = file_get_contents($path);
 
-        $model = ScaffyAssistant::makeModelName($key);
+        $model_name = $config['model_name'];
+        $key = $config['name'];
 
-        $contents = str_replace('DummyClass', $key . 'Controller', $contents);
-        $contents = str_replace('model_name', strtolower($model), $contents);
-        $contents = str_replace('Model', $model, $contents);
+        $contents = str_replace('Dummy', $key, $contents);
+        $contents = str_replace('model_name', strtolower($model_name), $contents);
+        $contents = str_replace('Model', $model_name, $contents);
 
-        $file_name = "{$model}Controller.php";
+        $file_name = "{$model_name}Controller.php";
         Storage::disk('controllers')->put($file_name, $contents);
 
-        $this->set_controller_methods(strtolower($model), $migration, $file_name);
+        self::set_controller_methods(strtolower($model_name), $config['migration'], $file_name);
     }
 
 
-    private function set_controller_methods($model_name, $item, $file_name)
+    protected static function set_controller_methods($model_name, $item, $file_name)
     {
         $create_stub = "";
         foreach ($item['fields'] as $field_key => $field) {
