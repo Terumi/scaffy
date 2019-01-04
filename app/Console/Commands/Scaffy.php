@@ -34,9 +34,10 @@ class Scaffy extends Command
             ModelMaker::create_model_file($config);
             ControllerMaker::create_controller_files($config);
             PageMaker::create_index_file($config);
+            PageMaker::create_creation_file($config);
+            PageMaker::create_edit_file($config);
             RouteMaker::addRoutes($config);
         }
-
 
 
     }

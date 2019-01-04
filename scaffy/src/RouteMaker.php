@@ -22,7 +22,7 @@ class RouteMaker
         $new_routes .= "Route::get('".$config['name']."/index', '".$model_controller."@index');\n";
         $new_routes .= "Route::get('".$config['name']."/create', '".$model_controller."@create');\n";
         $new_routes .= "Route::post('".$config['name']."/store', '".$model_controller."@store');\n";
-        $new_routes .= "Route::get('".$config['name']."/edit', '".$model_controller."@edit');\n";
+        $new_routes .= "Route::get('".$config['name']."/{id}/edit', '".$model_controller."@edit');\n";
         $new_routes .= "Route::post('".$config['name']."/update', '".$model_controller."@update');\n";
         $new_routes .= "Route::post('".$config['name']."/delete', '".$model_controller."@delete');\n";
         $new_routes .= "#routes#";

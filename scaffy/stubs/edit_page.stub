@@ -4,34 +4,18 @@
 
 <section class="content">
     <h1>
-        #page_title#
+        #page_title# edit
     </h1>
-    <a href='{!!url("admin/collaborator")!!}/create' class='btn btn-success'><i class="fa fa-plus"></i> New</a>
-    <br>
-    <br>
-    <table class="table table-striped table-bordered table-hover">
-        <thead>
-        <th>img</th>
-        <th>url</th>
-        <th>actions</th>
-        </thead>
-        <tbody>
-        @foreach($collaborators as $collaborator)
-        <tr>
-            <td>
+    <div class="text-right" style="margin-bottom: 25px;">
+        <a href="{{URL::previous()}}" class="btn btn-primary">Back</a>
+    </div>
 
-            </td>
-            <td>{!!$collaborator->url!!}</td>
-            <td>
-                <a data-toggle="modal" data-target="#myModal" class='delete btn btn-danger btn-xs'
-                   data-link="/admin/collaborator/{!!$collaborator->id!!}/deleteMsg"><i class='fa fa-trash'>
-                        delete</i></a>
-            </td>
-        </tr>
-        @endforeach
-        </tbody>
-    </table>
-    {!! $collaborators->render() !!}
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Excepturi hic perferendis rerum. Accusantium cumque id libero nemo, quos temporibus velit voluptates? Dolorem nemo nostrum odio porro quis, sequi sunt velit!</p>
+
+    <form action="">
+
+    </form>
+
 
 </section>
 @endsection

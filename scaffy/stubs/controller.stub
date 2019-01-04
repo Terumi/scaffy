@@ -16,7 +16,7 @@ class DummyController extends Controller
 
     public function create()
     {
-        return view('admin.model_name.create');
+        return view('admin.pages.model_name_create');
     }
 
     public function store(Request $req)
@@ -32,7 +32,7 @@ class DummyController extends Controller
     public function edit($id)
     {
         $model_name = Model::findOrFail($id);
-        return view('admin.model_name.edit')->with(['item' => $model_name]);
+        return view('admin.pages.model_name_edit')->with(['item' => $model_name]);
     }
 
     public function update($id, Request $request)
@@ -46,6 +46,6 @@ class DummyController extends Controller
     public function delete(Request $req)
     {
         Model::find($req->get('id'))->delete();
-        return redirect('admin/model_name');
+        return redirect('admin/model_name/index');
     }
 }

@@ -9,7 +9,6 @@ class PageMaker
 
     public static function create_index_file($config)
     {
-        $key = $config['name'];
         $path = base_path('scaffy/stubs/index_page.stub');
         $contents = file_get_contents($path);
 
@@ -39,57 +38,17 @@ class PageMaker
         Storage::disk('views')->put($file_name, $contents);
     }
 
-    public function create_creation_file()
+    public static function create_creation_file($config)
     {
-        $path = base_path('scaffy/stubs/create_page.stub');
-        $contents = file_get_contents($path);
+        $key = $config['model_name'];
+        $contents = Storage::disk('stubs')->get('create_page.stub');
+        Storage::disk('views')->put(strtolower($key)."_create.blade.php", $contents);
     }
 
-    public function create_edit_file()
+    public static function create_edit_file($config)
     {
-        $path = base_path('scaffy/stubs/edit_page.stub');
-        $contents = file_get_contents($path);
+        $key = $config['model_name'];
+        $contents = Storage::disk('stubs')->get('edit_page.stub');
+        Storage::disk('views')->put(strtolower($key)."_edit.blade.php", $contents);
     }
-
-
-    private function add_fields_to_migration_file($item, $file_name)
-    {
-        $table_stub = "";
-        foreach ($item['fields'] as $field_key => $field) {
-
-            $table_stub .= '$table->' . $field['type'] . "('" . $field_key . "')";
-
-            //add constraints
-            if (!empty($field['constraints'])) {
-                foreach ($field['constraints'] as $constraint) {
-                    switch ($constraint) {
-                        case "unique":
-                            $table_stub .= "->unique()";
-                            break;
-                    }
-                }
-            }
-            //todo add modifiers
-            $table_stub .= ";\n";
-
-            //add relations
-            if (!empty($field['references'])) {
-                $table_stub .= '$table->foreign(\'' . $field_key . '\')->references(\'' . $field['references']['column'] . "')->on('" . $field['references']['on'] . "');\n";
-            }
-        }
-
-        $contents = Storage::disk('migrations')->get($file_name);
-        $contents = str_replace('#table_fields#', $table_stub, $contents);
-        Storage::disk('migrations')->put($file_name, $contents);
-    }
-
-    /* public function create_migration_file($key)
-     {
-         $file_name = $this->create_migration_file($key);
-
-         //add fields to migration
-         $this->add_fields_to_migration_file($config['migrations'][$key], $file_name);
-
-     }*/
-
 }

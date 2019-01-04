@@ -21,19 +21,22 @@
         <tr>
             #table_content_items#
             <td>
-                <a class='btn btn-info btn-sm' href="{{url('/admin/#page_title#/{$#page_title#->id}/edit')}}">
+                <a class='btn btn-info btn-sm' href="{{url('/admin/#page_title#/'.$#page_title#->id.'/edit')}}">
                     <i class='fa fa-edit'>edit</i>
                 </a>
-                <a data-toggle="modal"
-                   onclick="confirm('Are you sure?')"
-                   class="delete btn btn-danger btn-sm">
-                    <i class="fa fa-trash">delete</i>
-                </a>
+                <form action="delete" method="post" onsubmit="confirm('Are you sure?')" style="display: inline;">
+                    {{csrf_field()}}
+                    <input type="hidden" name="id" value="{{$#page_title#->id}}">
+                    <button type="submit" class="btn btn-danger btn-sm" class="delete">
+                        <i class="fa fa-trash">delete</i>
+                    </button>
+                </form>
             </td>
         </tr>
         @endforeach
         </tbody>
     </table>
     {!! $items->render() !!}
+
 </section>
 @endsection
