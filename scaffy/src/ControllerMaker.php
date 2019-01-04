@@ -14,9 +14,8 @@ class ControllerMaker
         $contents = file_get_contents($path);
 
         $model_name = $config['model_name'];
-        $key = $config['name'];
 
-        $contents = str_replace('Dummy', $key, $contents);
+        $contents = str_replace('Dummy', $model_name, $contents);
         $contents = str_replace('model_name', strtolower($model_name), $contents);
         $contents = str_replace('Model', $model_name, $contents);
 

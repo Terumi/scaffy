@@ -65,6 +65,10 @@ return [
         ],
 
         // Scaffy Drivers
+        'routes' => [
+            'driver' => 'local',
+            'root' => base_path('routes')
+        ],
         'config' => [
             'driver' => 'local',
             'root' => base_path('scaffy/config')
@@ -85,6 +89,10 @@ return [
             'driver' => 'local',
             'root' => base_path('resources/views/admin/pages')
         ],
+        'stubs' => [
+            'driver' => 'local',
+            'root' => base_path('scaffy/stubs')
+        ]
     ],
 
 ];
