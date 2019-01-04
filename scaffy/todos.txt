@@ -1,0 +1,4 @@
+create admin layout
+add links to sidebar
+setup create view
+setup validators

@@ -17,6 +17,16 @@
         "id": {},
         "type": {}
       }
+    },
+    "create": {
+      "shown_fields": {
+        "type": {
+          "type": "text",
+          "placeholder": "Please enter a user type",
+          "smalltext": "the type should be more than 4 characters long",
+          "validation": "min4"
+        }
+      }
     }
   }
 }

@@ -1,0 +1,6 @@
+<div class="form-group">
+    <label for="">Name</label>
+    <input type="text"
+           class="form-control" name="" id="" aria-describedby="helpId" placeholder="This is a text">
+    <small id="helpId" class="form-text text-muted">Help text</small>
+</div>

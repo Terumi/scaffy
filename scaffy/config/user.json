@@ -46,6 +46,26 @@
         },
         "created_at": {}
       }
+    },
+    "create": {
+      "shown_fields": {
+        "name": {
+          "type": "text",
+          "placeholder": "Please enter your name",
+          "smalltext": "the name should be more than 4 characters long",
+          "validation": "min4"
+        },
+        "email": {
+          "type": "email",
+          "placeholder": "Please enter your email",
+          "validation": "email"
+        },
+        "type": {
+          "type": "dropdown",
+          "reference": "UserType->type",
+          "reference_value": "UserType->id"
+        }
+      }
     }
   }
 }

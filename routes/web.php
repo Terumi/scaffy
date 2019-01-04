@@ -22,6 +22,10 @@ Route::get('/', function () {
 
 
 
+
+
+
+
 # Scaffy_Routes_Start
 Route::group(["prefix" => "admin"], function () {
     Route::get('user/index', 'UserController@index');
