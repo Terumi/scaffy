@@ -29,7 +29,8 @@
           "on": "user_type",
           "relation_type": "1-1",
           "foreign_key": "id",
-          "relationName": "UserType"
+          "relationName": "UserType",
+          "variableName": "types"
         },
         "default": "0"
       }
@@ -62,8 +63,10 @@
         },
         "type": {
           "type": "dropdown",
-          "reference": "UserType->type",
-          "reference_value": "UserType->id"
+          "related_items": "types",
+          "related_item": "type",
+          "related_value": "id",
+          "related_display_value": "type"
         }
       }
     }

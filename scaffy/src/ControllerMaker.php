@@ -28,19 +28,25 @@ class ControllerMaker
 
     protected static function set_controller_methods($model_name, $item, $file_name)
     {
+        $contents = Storage::disk('controllers')->get($file_name);
         $create_stub = "";
+        $relations = "";
         foreach ($item['fields'] as $field_key => $field) {
 
             $create_stub .= '$' . $model_name . '->' . $field_key . ' = $req->get(\'' . $field_key . '\');' . "\n";
 
-            //add relations
-            //if (!empty($field['references'])) {
-            //    $table_stub .= '$table->foreign(\'' . $field_key . '\')->references(\'' . $field['references']['column'] . "')->on('" . $field['references']['on'] . "');\n";
-            // }
+            // add relations
+            if (!empty($field['references'])) {
+                $contents = str_replace("#imports#", "use App\\".$field['references']['relationName'].";\n#imports#", $contents);
+
+                $relations .= "$" . $field['references']['variableName'] . "= " . $field['references']['relationName'] . "::all();";
+                $contents = str_replace("_create');", "_create')->with(['".$field['references']['variableName']."' => \${$field['references']['variableName']}]);", $contents);
+            }
         }
 
-        $contents = Storage::disk('controllers')->get($file_name);
+
         $contents = str_replace('#model_fields#', $create_stub, $contents);
+        $contents = str_replace('#related_models#', $relations, $contents);
         Storage::disk('controllers')->put($file_name, $contents);
     }
 

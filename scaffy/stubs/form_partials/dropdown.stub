@@ -1,0 +1,8 @@
+<div class="form-group">
+    <label for="#name#">#name#</label>
+    <select class="form-control" name="#name#" id="#name#">
+        @foreach ($related_items as $single_item)
+        <option value="{{$single_item->related_value}}">{{$single_item->related_display_value}}</option>
+        @endforeach
+    </select>
+</div>

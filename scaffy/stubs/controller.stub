@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Model;
+#imports#
 
 use Illuminate\Http\Request;
 
@@ -16,6 +17,7 @@ class DummyController extends Controller
 
     public function create()
     {
+        #related_models#
         return view('admin.pages.model_name_create');
     }
 
