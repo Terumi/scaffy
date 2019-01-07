@@ -26,13 +26,25 @@
         "constraints": [],
         "references": {
           "column": "id",
-          "on": "user_type",
+          "on": "usertype",
           "relation_type": "1-1",
           "foreign_key": "id",
           "relationName": "UserType",
           "variableName": "types"
         },
         "default": "0"
+      },
+      "department_id": {
+        "type": "integer",
+        "constraints": [],
+        "references": {
+          "column": "id",
+          "on": "department",
+          "relation_type": "1-1",
+          "foreign_key": "id",
+          "relationName": "Department",
+          "variableName": "departments"
+        }
       }
     }
   },
@@ -44,6 +56,9 @@
         "email": {},
         "type": {
           "reference": "UserType->type"
+        },
+        "department": {
+          "reference": "Department->name"
         },
         "created_at": {}
       }
@@ -61,12 +76,19 @@
           "placeholder": "Please enter your email",
           "validation": "email"
         },
-        "type": {
+        "type_id": {
           "type": "dropdown",
           "related_items": "types",
           "related_item": "type",
           "related_value": "id",
           "related_display_value": "type"
+        },
+        "department_id": {
+          "type": "dropdown",
+          "related_items": "departments",
+          "related_item": "department",
+          "related_value": "id",
+          "related_display_value": "name"
         }
       }
     }

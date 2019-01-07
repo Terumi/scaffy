@@ -17,8 +17,9 @@ class DummyController extends Controller
 
     public function create()
     {
-        #related_models#
-        return view('admin.pages.model_name_create');
+        #relations#
+
+        return view('admin.pages.model_name_create');#withs#
     }
 
     public function store(Request $req)
@@ -27,7 +28,7 @@ class DummyController extends Controller
         #model_fields#
         $model_name->save();
 
-        return redirect('admin/model_name');
+        return redirect('admin/model_name/index');
 
     }
 

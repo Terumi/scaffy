@@ -29,34 +29,53 @@ class ControllerMaker
     protected static function set_controller_methods($model_name, $item, $file_name)
     {
         $contents = Storage::disk('controllers')->get($file_name);
-        $create_stub = "";
+
         $relations = "";
+        $imports = "";
+        $withs = "";
+
         foreach ($item['fields'] as $field_key => $field) {
 
-            $create_stub .= '$' . $model_name . '->' . $field_key . ' = $req->get(\'' . $field_key . '\');' . "\n";
-
-            // add relations
             if (!empty($field['references'])) {
-                $contents = str_replace("#imports#", "use App\\".$field['references']['relationName'].";\n#imports#", $contents);
-
-                $relations .= "$" . $field['references']['variableName'] . "= " . $field['references']['relationName'] . "::all();";
-                $contents = str_replace("_create');", "_create')->with(['".$field['references']['variableName']."' => \${$field['references']['variableName']}]);", $contents);
+                $imports .= self::add_imports($field);
+                $relations .= self::add_relations($field);
+                $withs .= self::add_withs($field);
             }
         }
 
+        if (!empty($imports))
+            $contents = str_replace("#imports#", $imports, $contents);
+        if (!empty($relations))
+            $contents = str_replace("#relations#", $relations, $contents);
 
-        $contents = str_replace('#model_fields#', $create_stub, $contents);
-        $contents = str_replace('#related_models#', $relations, $contents);
+        $contents = str_replace(";#withs#", empty($withs) ? ";" : $withs.";", $contents);
+        $contents = str_replace('#model_fields#', self::create_method($model_name, $item), $contents);
+
         Storage::disk('controllers')->put($file_name, $contents);
     }
 
-    /* public function create_migration_file($key)
-     {
-         $file_name = $this->create_migration_file($key);
+    private static function create_method($model_name, $item)
+    {
+        $create_stub = "";
+        foreach ($item['fields'] as $field_key => $field) {
+            $create_stub .= '$' . $model_name . '->' . $field_key . ' = $req->get(\'' . $field_key . '\');' . "\n";
+        }
 
-         //add fields to migration
-         $this->add_fields_to_migration_file($config['migrations'][$key], $file_name);
+        return $create_stub;
+    }
 
-     }*/
+    private static function add_imports($field)
+    {
+        return "use App\\".$field['references']['relationName'].";\n";
+    }
 
+    private static function add_relations($field)
+    {
+        return "$" . $field['references']['variableName'] . "= " . $field['references']['relationName'] . "::all();";
+    }
+
+    private static function add_withs($field)
+    {
+        return "->with(['" . $field['references']['variableName'] . "' => \${$field['references']['variableName']}])";
+    }
 }

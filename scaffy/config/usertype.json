@@ -1,5 +1,5 @@
 {
-  "name": "user_type",
+  "name": "usertype",
   "model_name": "UserType",
   "migration": {
     "fields": {

@@ -101,6 +101,7 @@ class PageMaker
 
         $key = $config['model_name'];
         $contents = str_replace('#form#', $form_contents, $contents);
+        $contents = str_replace('#url#', strtolower($key)."/store", $contents);
         Storage::disk('views')->put(strtolower($key) . "_create.blade.php", $contents);
     }
 

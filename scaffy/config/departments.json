@@ -1,0 +1,42 @@
+{
+  "name": "department",
+  "model_name": "Department",
+  "migration": {
+    "fields": {
+      "id": {
+        "type": "increments"
+      },
+      "name": {
+        "type": "string"
+      },
+      "telephone": {
+        "type": "string"
+      }
+    }
+  },
+  "pages": {
+    "index": {
+      "shown_fields": {
+        "id": {},
+        "name": {},
+        "telephone": {}
+      }
+    },
+    "create": {
+      "shown_fields": {
+        "name": {
+          "type": "text",
+          "placeholder": "Please enter a department name",
+          "smalltext": "the department name should be more than 4 characters long",
+          "validation": "min4"
+        },
+        "telephone": {
+          "type": "text",
+          "placeholder": "Please enter a telephone number",
+          "smalltext": "the department telephone should be numeric",
+          "validation": "numeric"
+        }
+      }
+    }
+  }
+}
