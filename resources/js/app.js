@@ -6,7 +6,7 @@
  */
 
 require('./bootstrap');
-
+require('./sb-admin.min');
 window.Vue = require('vue');
 
 /**
