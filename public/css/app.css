@@ -13686,8 +13686,9 @@ body.fixed-nav.sidebar-toggled #content-wrapper {
 }
 
 :root {
-  --input-padding-x:0.75rem;
-  --input-padding-y:0.75rem;
+  --input-padding-x: 0.75rem;
+  --input-padding-y: 0.75rem
+;
 }
 
 .card-login {
@@ -13740,12 +13741,12 @@ body.fixed-nav.sidebar-toggled #content-wrapper {
 
 .form-label-group input:not(:placeholder-shown) {
   padding-top: calc(var(--input-padding-y) + var(--input-padding-y) * (2 / 3));
-  padding-bottom: calc(var(--input-padding-y)/ 3);
+  padding-bottom: calc(var(--input-padding-y) / 3);
 }
 
 .form-label-group input:not(:placeholder-shown) ~ label {
-  padding-top: calc(var(--input-padding-y)/ 3);
-  padding-bottom: calc(var(--input-padding-y)/ 3);
+  padding-top: calc(var(--input-padding-y) / 3);
+  padding-bottom: calc(var(--input-padding-y) / 3);
   font-size: 12px;
   color: #777;
 }
@@ -13758,7 +13759,7 @@ footer.sticky-footer {
   right: 0;
   bottom: 0;
   width: calc(100% - 90px);
-  height: 80px;
+  height: 40px;
   background-color: #e9ecef;
 }
 

@@ -9,7 +9,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>App Name - @yield('title')</title>
     <link href="{{asset('css/app.css')}}" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -18,13 +17,10 @@
     <![endif]-->
 </head>
 
-
 <body id="page-top">
 <div id="app">
     <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
-
-        <a class="navbar-brand mr-1" href="index.html">{{env('APP_NAME')}}</a>
-
+        <a class="navbar-brand mr-1" href="{{url('/')}}">{{env('APP_NAME')}}</a>
         <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
             <i class="fa fa-bars"></i>
         </button>
@@ -40,13 +36,7 @@
             <div class="container-fluid">
                 @yield('content')
             </div>
-            <footer class="sticky-footer">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright © Your Website 2018</span>
-                    </div>
-                </div>
-            </footer>
+            @include('admin.partials.footer')
         </div>
     </div>
     <!-- Logout Modal-->

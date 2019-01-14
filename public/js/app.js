@@ -13934,7 +13934,6 @@ module.exports = __webpack_require__(44);
  */
 
 __webpack_require__(13);
-__webpack_require__(36);
 window.Vue = __webpack_require__(37);
 
 /**
@@ -13957,8 +13956,49 @@ Vue.component('example-component', __webpack_require__(40));
  */
 
 var app = new Vue({
-  el: '#app'
+    el: '#app'
 });
+
+(function ($) {
+    "use strict"; // Start of use strict
+
+    // Toggle the side navigation
+
+    $("#sidebarToggle").on('click', function (e) {
+        e.preventDefault();
+        $("body").toggleClass("sidebar-toggled");
+        $(".sidebar").toggleClass("toggled");
+    });
+
+    // Prevent the content wrapper from scrolling when the fixed side navigation hovered over
+    $('body.fixed-nav .sidebar').on('mousewheel DOMMouseScroll wheel', function (e) {
+        if ($(window).width() > 768) {
+            var e0 = e.originalEvent,
+                delta = e0.wheelDelta || -e0.detail;
+            this.scrollTop += (delta < 0 ? 1 : -1) * 30;
+            e.preventDefault();
+        }
+    });
+
+    // Scroll to top button appear
+    $(document).on('scroll', function () {
+        var scrollDistance = $(this).scrollTop();
+        if (scrollDistance > 100) {
+            $('.scroll-to-top').fadeIn();
+        } else {
+            $('.scroll-to-top').fadeOut();
+        }
+    });
+
+    // Smooth scrolling using jQuery easing
+    $(document).on('click', 'a.scroll-to-top', function (event) {
+        var $anchor = $(this);
+        $('html, body').stop().animate({
+            scrollTop: $($anchor.attr('href')).offset().top
+        }, 1000, 'easeInOutExpo');
+        event.preventDefault();
+    });
+})(jQuery); // End of use strict
 
 /***/ }),
 /* 13 */
@@ -36308,32 +36348,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 36 */
-/***/ (function(module, exports) {
-
-/*!
- * Start Bootstrap - SB Admin v5.0.2 (https://startbootstrap.com/template-overviews/sb-admin)
- * Copyright 2013-2018 Start Bootstrap
- * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-sb-admin/blob/master/LICENSE)
- */
-
-!function (t) {
-  "use strict";
-  t("#sidebarToggle").click(function (e) {
-    e.preventDefault(), t("body").toggleClass("sidebar-toggled"), t(".sidebar").toggleClass("toggled");
-  }), t("body.fixed-nav .sidebar").on("mousewheel DOMMouseScroll wheel", function (e) {
-    if (768 < $window.width()) {
-      var o = e.originalEvent,
-          t = o.wheelDelta || -o.detail;this.scrollTop += 30 * (t < 0 ? 1 : -1), e.preventDefault();
-    }
-  }), t(document).scroll(function () {
-    100 < t(this).scrollTop() ? t(".scroll-to-top").fadeIn() : t(".scroll-to-top").fadeOut();
-  }), t(document).on("click", "a.scroll-to-top", function (e) {
-    var o = t(this);t("html, body").stop().animate({ scrollTop: t(o.attr("href")).offset().top }, 1e3, "easeInOutExpo"), e.preventDefault();
-  });
-}(jQuery);
-
-/***/ }),
+/* 36 */,
 /* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
