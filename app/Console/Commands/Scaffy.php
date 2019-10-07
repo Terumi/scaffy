@@ -25,15 +25,16 @@ class Scaffy extends Command
 
         $files = Storage::disk('config')->files();
 
-        RouteMaker::clear_old_routes();
+        RouteMaker::initialize_routes();
 
         foreach ($files as $file) {
             $config = json_decode(Storage::disk('config')->get($file), true);
 
-            //MigrationMaker::create_migration_file($config);
+            MigrationMaker::create_migration_file($config);
             ModelMaker::create_model_file($config);
             ControllerMaker::create_controller_files($config);
             PageMaker::create_index_file($config);
+            PageMaker::create_sidebar_file();
             PageMaker::create_creation_file($config);
             PageMaker::create_edit_file($config);
             RouteMaker::addRoutes($config);

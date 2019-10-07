@@ -7,6 +7,18 @@ use Illuminate\Support\Facades\Storage;
 class PageMaker
 {
 
+    public static function create_sidebar_file()
+    {
+        $sidebar_contents = Storage::disk('templates')->get('partials/sidebar.blade.php');
+        $sidebar_contents = ScaffyAssistant::delete_all_between('<!--links start-->', '<!--links end-->', $sidebar_contents);
+
+        $new_routes = "#routes#\n";
+
+        $sidebar_contents = str_replace('<!--links start-->', $new_routes, $sidebar_contents);
+
+        Storage::disk('templates')->put('partials/sidebar.blade.php', $sidebar_contents);
+    }
+
     public static function create_index_file($config)
     {
         $path = base_path('scaffy/stubs/index_page.stub');

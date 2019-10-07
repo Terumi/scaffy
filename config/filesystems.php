@@ -89,6 +89,10 @@ return [
             'driver' => 'local',
             'root' => base_path('resources/views/admin/pages')
         ],
+        'templates' => [
+            'driver' => 'local',
+            'root' => base_path('resources/views/admin')
+        ],
         'stubs' => [
             'driver' => 'local',
             'root' => base_path('scaffy/stubs')

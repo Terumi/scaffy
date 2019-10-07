@@ -1,5 +1,5 @@
-# Scaffy_Routes_Start
+###start
 Route::group(["prefix" => "admin"], function () {
     #routes#
 });
-# Scaffy_Routes_End
+###end

@@ -2,15 +2,10 @@
     <li class="nav-item">
         <a class="nav-link" href="index.html">
             <i class="fa fa-dashboard"></i>
-             <span>Main</span>
+            <span>Main</span>
         </a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link" href="index.html">
-            <i class="fa fa-dashboard"></i>
-            <span>Users</span>
-        </a>
-    </li>
+    
     <li class="nav-item">
         <a class="nav-link" href="index.html">
             <i class="fa fa-dashboard"></i>
