@@ -96,6 +96,10 @@ return [
         'stubs' => [
             'driver' => 'local',
             'root' => base_path('scaffy/stubs')
+        ],
+        'scaffy' => [
+            'driver' => 'local',
+            'root' => base_path('scaffy')
         ]
     ],
 
