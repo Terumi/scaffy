@@ -52,6 +52,8 @@ class MakeMigration extends Command
         }
 
         $name = $file_names[$model];
+        //todo make content
+
         Storage::disk('scaffy')->put("migrations/" . $name . ".json", "something");
 
     }
