@@ -38,25 +38,71 @@ class MakeMigration extends Command
      */
     public function handle()
     {
+        $contents = '';
         $file_names = Storage::disk('scaffy')->files('models');
+        $data_types = [
+            'increments',
+            'integer',
+            'string',
+            'text',
+            'datetime'
+        ];
+
         array_walk($file_names, [$this, 'extract_name']);
+
+        $fields = [];
+         
 
         $question = "For which model?";
         foreach ($file_names as $index => $name) {
             $question .= "\n" . $index . ". " . $name;
         }
 
-        $model = -1;
-        while (empty($file_names[$model])) {
-            $model = $this->ask($question);
+        $model = $this->choice('For which model?', $file_names);
+
+        $name = $model;
+        $file = "migrations/$name.json";
+
+        $ask_more = true;
+        while ($ask_more) {
+
+            $add = $this->confirm('Add field?', true);
+
+            if ($add) {
+                $field_name = $this->ask('Name');
+                $field_type = $this->choice('Type?', $data_types);
+
+                $contents .= "\$table->$field_type('$field_name')";
+
+            } else {
+                $ask_more = false;
+            }
         }
 
-        $name = $file_names[$model];
-        //todo make content
 
-        Storage::disk('scaffy')->put("migrations/" . $name . ".json", "something");
+
+        Storage::disk('scaffy')->put($file, $contents);
+        die('ok');
 
     }
+
+
+    /*
+     * "fields": {
+      "id": {
+        "type": "increments"
+      },
+      "name": {
+        "type": "string"
+      },
+      "telephone": {
+        "type": "string"
+      },
+      "email": {
+        "type": "string"
+      }
+    }
+     */
 
     private function extract_name(String &$victim)
     {
