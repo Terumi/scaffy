@@ -38,8 +38,8 @@ class MakeMigration extends Command
      */
     public function handle()
     {
-        $contents = '';
-        $file_names = Storage::disk('scaffy')->files('models');
+        $contents = ["fields" => []];
+
         $data_types = [
             'increments',
             'integer',
@@ -48,15 +48,11 @@ class MakeMigration extends Command
             'datetime'
         ];
 
+        $file_names = Storage::disk('scaffy')->files('models');
         array_walk($file_names, [$this, 'extract_name']);
 
-        $fields = [];
-         
-
-        $question = "For which model?";
-        foreach ($file_names as $index => $name) {
-            $question .= "\n" . $index . ". " . $name;
-        }
+        if (!count($file_names))
+            die("no models\nexiting...\n");
 
         $model = $this->choice('For which model?', $file_names);
 
@@ -65,44 +61,17 @@ class MakeMigration extends Command
 
         $ask_more = true;
         while ($ask_more) {
-
-            $add = $this->confirm('Add field?', true);
-
-            if ($add) {
+            $ask_more = $this->confirm('Add field?', true);
+            if ($ask_more) {
                 $field_name = $this->ask('Name');
                 $field_type = $this->choice('Type?', $data_types);
-
-                $contents .= "\$table->$field_type('$field_name')";
-
-            } else {
-                $ask_more = false;
+                $contents['fields'][] = ["name" => $field_name, "type" => $field_type];
             }
         }
 
-
-
-        Storage::disk('scaffy')->put($file, $contents);
+        Storage::disk('scaffy')->put($file, json_encode($contents));
         die('ok');
-
     }
-
-
-    /*
-     * "fields": {
-      "id": {
-        "type": "increments"
-      },
-      "name": {
-        "type": "string"
-      },
-      "telephone": {
-        "type": "string"
-      },
-      "email": {
-        "type": "string"
-      }
-    }
-     */
 
     private function extract_name(String &$victim)
     {
