@@ -28,14 +28,16 @@ class MakeModel extends Command
      */
     public function handle()
     {
-        $name = $this->ask('What is the model name?');
-        $title = $this->ask('What is the model title?');
+        $name = $this->ask('Model Name');
+        //$title = $this->ask('Model Title');
+        $table = $this->ask('Table name');
 
         $content = [
             "model_name" => $name,
-            "title" => $title
+            //"title" => $title,
+            "table" => $table
         ];
 
-        Storage::disk('scaffy')->put("models/" . $name . ".json", json_encode($content));
+        Storage::disk('scaffy')->put("config/" . $name . "/model.json", json_encode($content));
     }
 }

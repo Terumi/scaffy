@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
-class MakeMigration extends Command
+class MakeMigration extends ScaffyCommand
 {
     /**
      * The name and signature of the console command.
@@ -38,8 +37,6 @@ class MakeMigration extends Command
      */
     public function handle()
     {
-        $contents = ["fields" => []];
-
         $data_types = [
             'increments',
             'integer',
@@ -48,16 +45,10 @@ class MakeMigration extends Command
             'datetime'
         ];
 
-        $file_names = Storage::disk('scaffy')->files('models');
-        array_walk($file_names, [$this, 'extract_name']);
-
-        if (!count($file_names))
-            die("no models\nexiting...\n");
-
-        $model = $this->choice('For which model?', $file_names);
+        $model = $this->show_model_options();
 
         $name = $model;
-        $file = "migrations/$name.json";
+        $file = "config/$name/migration.json";
 
         $ask_more = true;
         while ($ask_more) {
@@ -65,18 +56,11 @@ class MakeMigration extends Command
             if ($ask_more) {
                 $field_name = $this->ask('Name');
                 $field_type = $this->choice('Type?', $data_types);
-                $contents['fields'][] = ["name" => $field_name, "type" => $field_type];
+                $contents['table']['fields'][] = ["name" => $field_name, "type" => $field_type];
             }
         }
 
         Storage::disk('scaffy')->put($file, json_encode($contents));
-        die('ok');
+        die("ok\n");
     }
-
-    private function extract_name(String &$victim)
-    {
-        $victim = str_replace('models/', '', $victim);
-        $victim = str_replace('.json', '', $victim);
-    }
-
 }

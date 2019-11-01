@@ -1,14 +1,14 @@
 <?php
 
 namespace App;
+
 use Illuminate\Database\Eloquent\Model;
 
-class DummyClass extends Model
+class _model_name extends Model
 {
-    protected $table = 'TableName';
+    protected $table = _table_name;
     protected $fillable = [];
     protected $guarded = [];
     protected $hidden = [];
-
-    #relations#
+    _relations_
 }
