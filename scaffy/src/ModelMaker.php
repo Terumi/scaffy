@@ -6,12 +6,36 @@ use Illuminate\Support\Facades\Storage;
 
 class ModelMaker
 {
-
-
-    public static function create_model_file($config)
+    public static function run()
     {
-        $path = base_path('scaffy/stubs/model.stub');
-        $contents = file_get_contents($path);
+
+        //read the models
+        $models = ScaffyAssistant::get_models();
+
+
+        //iterate over them and do
+        foreach ($models as $model) {
+            $content = new Content('stubs/model.stub');
+            $model_config = ScaffyAssistant::get_model_config_file($model);
+            $content->replace('_model_name', $model_config->model_name);
+            $content->replace('_table_name', $model_config->table);
+
+            //get relations file
+            $relations = ScaffyAssistant::get_relations_config_file($model);
+
+            if ($relations) {
+                self::add_relations_to_model($content, $relations);
+            }
+
+            //fill name
+
+            //fill other attributes
+            //fill relations
+
+            $content->save($model);
+        }
+
+        die();
 
         $key = $config['name'];
         $modelName = $config['model_name'];
@@ -27,6 +51,15 @@ class ModelMaker
         self::add_model_relations($config['migration'], $file_name);
     }
 
+
+    private static function add_relations_to_model(Content $content, $relations)
+    {
+        foreach ($relations as $relation){
+
+        }
+        return $content;
+    }
+
     protected static function add_model_relations($migration, string $model_file_name): void
     {
         $model_stub = '';
@@ -36,7 +69,7 @@ class ModelMaker
             if (!empty($field['references'])) {
                 switch ($field['references']['relation_type']) {
                     case '1-1':
-                        $model_stub .= 'public function ' . $field['references']['relationName'] . '(){return $this->hasOne(\'App\\' . ScaffyAssistant::makeModelName($field['references']['on']) . '\', \''. $field['references']['column'].'\', \''. $field_key .'\');}';
+                        $model_stub .= 'public function ' . $field['references']['relationName'] . '(){return $this->hasOne(\'App\\' . ScaffyAssistant::makeModelName($field['references']['on']) . '\', \'' . $field['references']['column'] . '\', \'' . $field_key . '\');}';
                         break;
                     case '1-N':
 

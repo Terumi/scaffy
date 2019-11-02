@@ -2,21 +2,11 @@
 
 namespace App\Console\Commands;
 
+use ffy\scaffy\ScaffyAssistant;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 
 abstract class ScaffyCommand extends Command
 {
-
-    /**
-     * @return array
-     */
-    protected function get_models(): array
-    {
-        $file_names = Storage::disk('scaffy')->directories('config');
-        array_walk($file_names, [$this, 'extract_name']);
-        return $file_names;
-    }
 
     /**
      * @param string $question
@@ -24,7 +14,7 @@ abstract class ScaffyCommand extends Command
      */
     protected function show_model_options($question = "Select Model"): string
     {
-        $file_names = $this->get_models();
+        $file_names = ScaffyAssistant::get_models();
         $file_names[] = "Cancel";
 
         if (!count($file_names))
@@ -36,10 +26,5 @@ abstract class ScaffyCommand extends Command
             die("Bye!\n");
 
         return $model;
-    }
-
-    protected function extract_name(String &$victim)
-    {
-        $victim = str_replace('config/', '', $victim);
     }
 }

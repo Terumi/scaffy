@@ -13,12 +13,15 @@ class Content
     private $stub;
 
 
-    public function __construct($disk, $file, $stub = null)
+    public function __construct($stub)
     {
-        $this->disk = $disk;
-        $this->file = $file;
-        $this->stub = $stub;
-        $this->body = Storage::disk($disk)->get($file);
+        $this->body = Storage::disk('scaffy')->get($stub);
+    }
+
+
+    public function replace(string $what, string $with)
+    {
+        $this->body = str_replace($what, $with, $this->body);
     }
 
     public function deleteBetween($beginning, $end)
@@ -41,13 +44,9 @@ class Content
         Storage::disk($this->disk)->put($this->file, $this->body . $to_be_appeded);
     }
 
-    public function replace(string $what, string $with)
+    public function save($name)
     {
-        $this->body = str_replace($what, $with, $this->body);
-    }
-
-    public function save(){
-        Storage::disk($this->disk)->put($this->file, $this->body);
+        Storage::disk('scaffy')->put("$name.php", $this->body);
     }
 
 

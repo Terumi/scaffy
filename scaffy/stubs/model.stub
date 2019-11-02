@@ -6,9 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class _model_name extends Model
 {
-    protected $table = _table_name;
+    protected $table = "_table_name";
     protected $fillable = [];
     protected $guarded = [];
     protected $hidden = [];
+
     _relations_
 }

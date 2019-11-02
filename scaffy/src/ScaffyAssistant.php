@@ -2,28 +2,71 @@
 
 namespace ffy\scaffy;
 
+use Illuminate\Support\Facades\Storage;
+
 class ScaffyAssistant
 {
-    public static function makeModelName($key)
+    /**
+     * @return array
+     */
+    public static function get_models(): array
     {
-        return implode('', array_map('ucfirst', explode('_', $key)));
+        $file_names = Storage::disk('scaffy')->directories('config');
+        return self::remove_config_folder_from_name($file_names);
     }
 
-    public static function makeLowerCaseModelName($key)
+    /**
+     * @param $model
+     * @return array
+     */
+    public static function get_model_files($model)
     {
-        return implode('', array_map('strtolower', explode('_', $key)));
+        $file_names = Storage::disk('scaffy')->files('config/' . $model);
+        return self::remove_config_folder_from_name($file_names);
     }
 
-    public static function delete_all_between($beginning, $end, $string)
+    /**
+     * @param array $file_names
+     * @return array
+     */
+    protected static function remove_config_folder_from_name(array $file_names): array
     {
-        $beginningPos = strpos($string, $beginning);
-        $endPos = strpos($string, $end);
-        if ($beginningPos === false || $endPos === false) {
-            return $string;
-        }
-        $textToDelete = substr($string, $beginningPos, ($endPos + strlen($end)) - $beginningPos);
-
-        return self::delete_all_between($beginning, $end, str_replace($textToDelete, '', $string));
+        array_walk($file_names, [self::class, 'extract_name']);
+        return $file_names;
     }
 
+    /**
+     * @param String $victim
+     */
+    public static function extract_name(String &$victim)
+    {
+        $victim = str_replace('config/', '', $victim);
+    }
+
+    public static function get_model_config_file($model)
+    {
+        $file_name = 'model.json';
+        return self::get_file($model, $file_name);
+    }
+
+    public static function get_relations_config_file($model)
+    {
+        $file_name = 'relations.json';
+        return self::get_file($model, $file_name);
+    }
+
+    /**
+     * @param $model
+     * @param string $file_name
+     * @return mixed
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    protected static function get_file($model, string $file_name)
+    {
+        if (!Storage::disk('scaffy')->has('config/' . $model . '/' . $file_name))
+            return false;
+
+        $file = Storage::disk('scaffy')->get('config/' . $model . '/' . $file_name);
+        return json_decode($file);
+    }
 }

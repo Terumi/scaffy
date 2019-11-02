@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Support\Facades\Storage;
+
 class MakeRelation extends ScaffyCommand
 {
     /**
@@ -46,12 +48,42 @@ class MakeRelation extends ScaffyCommand
             'One to One', 'One to Many', 'Many to Many', 'Has One Through', 'Has Many Through'
         ];
 
-        //return $this->hasOne('App\Phone', 'foreign_key', 'local_key');
+        $relation_type = $this->choice('Type?', $relation_types);
+        $contents = ['relates_to' => $model_two, 'relationType' => $relation_type];
+        $file = "config/$model_one/relations.json";
 
-        //id of first model
-        //id of second one
+        switch ($relation_type) {
+            case 'One to One':
+                $contents['localKey'] = $this->ask('Local Key');
+                $contents['foreignKey'] = $this->ask('Foreign Key');
+                break;
+            case 'One to Many':
+                $contents['localKey'] = $this->ask('Local Key');
+                $contents['foreignKey'] = $this->ask('Foreign Key');
+                break;
+            case 'Many to Many':
+                $contents['pivotTable'] = $this->ask('Pivot Table');
+                $contents['localKey'] = $this->ask('First Model ID');
+                $contents['foreignKey'] = $this->ask('Second Model ID');
+                break;
+            case 'Has One Through':
+                //todo
+                break;
 
-        //add to model
-        //add to migration
+            case 'Has Many Through':
+                //todo
+                break;
+        }
+
+        if (!Storage::disk('scaffy')->exists($file)) {
+            Storage::disk('scaffy')->put($file, json_encode($contents));
+        } else {
+            $existing_contents = json_decode(Storage::disk('scaffy')->get($file), true);
+            $existing_contents[] = $contents;
+
+            Storage::disk('scaffy')->put($file, json_encode($existing_contents));
+        }
+
+        die("done \n");
     }
 }
