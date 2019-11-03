@@ -1,0 +1,5 @@
+public function #related_to#()
+{
+    return $this->belongsToMany('//related_model', '//pivot_table',  '//local_key', '//foreign_key');
+}
+

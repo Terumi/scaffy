@@ -1,0 +1,4 @@
+public function #related_to#()
+{
+    return $this->hasOne('//related_model', '//foreign_key', '//local_key');
+}

@@ -24,6 +24,11 @@ class Content
         $this->body = str_replace($what, $with, $this->body);
     }
 
+    public function append(string $what)
+    {
+        $this->body .= $what;
+    }
+
     public function deleteBetween($beginning, $end)
     {
         $beginningPos = strpos($this->body, $beginning);

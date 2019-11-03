@@ -11,5 +11,5 @@ class _model_name extends Model
     protected $guarded = [];
     protected $hidden = [];
 
-    _relations_
+    //relations
 }
