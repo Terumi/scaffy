@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use ffy\scaffy\MigrationMaker;
 use ffy\scaffy\ModelMaker;
 use ffy\scaffy\RouteMaker;
 use Illuminate\Console\Command;
@@ -39,6 +40,7 @@ class ScaffyCompiler extends Command
      */
     public function handle()
     {
+        MigrationMaker::run();
         RouteMaker::run();
         ModelMaker::run();
     }

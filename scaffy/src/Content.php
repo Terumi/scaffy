@@ -28,6 +28,11 @@ class Content
         $this->body .= $what;
     }
 
+    public function add(string $what, string $after)
+    {
+        $this->body = str_replace($after, $what . "\n $after", $this->body);
+    }
+
     public function deleteBetween($beginning, $end)
     {
         $beginningPos = strpos($this->body, $beginning);

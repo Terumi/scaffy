@@ -17,15 +17,12 @@ class RouteMaker
         //get the basic routes stub
         $content = new Content('stubs/routes.stub');
         //iterate over them and do
-
         foreach ($models as $model) {
             $inner_content = TemplateManager::route_group($model);
-            $content->replace('#routes#', $inner_content . "\n#routes#");
+            $content->add($inner_content, '#routes#');
+
         }
-
-
         $original_content->append($content->body);
         $original_content->save('web');
-
     }
 }

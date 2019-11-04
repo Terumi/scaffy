@@ -45,6 +45,12 @@ class TemplateManager
         return $content;
     }
 
+    public static function migration($column)
+    {
+        $content = '$table->' . $column->type . '(\''. $column->name .'\');'. "\n";
+        return $content;
+    }
+
     /*public static function add_additional_routes_to_routes_file(Content $extra_content)
     {
         $content = Storage::disk('routes')->get('web.php');

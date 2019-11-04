@@ -1,5 +1,6 @@
 ###start
 Route::group(["prefix" => "admin"], function () {
+
     #routes#
 });
 ###end

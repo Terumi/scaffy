@@ -2,10 +2,61 @@
 
 namespace ffy\scaffy;
 
+use Exception;
 use Illuminate\Support\Facades\Storage;
 
 class MigrationMaker
 {
+
+
+    public static function run()
+    {
+        //read the models
+        $models = ScaffyAssistant::get_models();
+
+        foreach ($models as $model) {
+            $content = new Content('stubs/migration.stub');
+            $model_config = ScaffyAssistant::get_model_config_file($model);
+
+            $content->replace('DummyClassMigration', $model_config->model_name . "Migration");
+            $content->replace('DummyTable', $model_config->table);
+
+
+            //get model migration file
+            try {
+                $columns = Storage::disk('scaffy')->get('config/' . $model . '/migration.json');
+            } catch (Exception $exception) {
+                continue;
+            }
+
+            $migration_config = json_decode($columns);
+            $inner_content = '';
+            foreach ($migration_config->table->fields as $column) {
+                $inner_content .= TemplateManager::migration($column);
+                //attach it to a common text
+            }
+            $content->add($inner_content, '#table_fields#');
+
+            // lookup for relations
+            try {
+
+                $relations = Storage::disk('scaffy')->get('config/' . $model . '/relations.json');
+            } catch (Exception $exception) {
+                //save the file
+                $content->save($model . "Migration");
+                //and exit
+                continue;
+            }
+
+            //check if something relates to this model
+
+            //attach text to outer file
+
+
+            $content->add('asd', '#table_fields#');
+        }
+
+    }
 
     public static function create_migration_file($config)
     {
@@ -58,13 +109,13 @@ class MigrationMaker
         Storage::disk('migrations')->put($file_name, $contents);
     }
 
-   /* public function create_migration_file($key)
-    {
-        $file_name = $this->create_migration_file($key);
+    /* public function create_migration_file($key)
+     {
+         $file_name = $this->create_migration_file($key);
 
-        //add fields to migration
-        $this->add_fields_to_migration_file($config['migrations'][$key], $file_name);
+         //add fields to migration
+         $this->add_fields_to_migration_file($config['migrations'][$key], $file_name);
 
-    }*/
+     }*/
 
 }
