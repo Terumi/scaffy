@@ -6,36 +6,26 @@ use Illuminate\Support\Facades\Storage;
 
 class RouteMaker
 {
-
-    /**
-     * @return Content
-     */
-    protected static function getContent(): Content
-    {
-        $route_content = new Content('routes', 'web.php', 'routes.stub');
-        return $route_content;
-    }
-
-    public static function initialize_routes()
-    {
-        $route_content = self::getContent();
-        $route_content->initialize();
-    }
-
-    public static function addRoutes($config)
+    public static function run()
     {
 
-        $model_controller = $config['model_name'] . "Controller";
-        $new_routes = "#routes#\n";
-        $new_routes .= "\tRoute::get('" . $config['name'] . "/index', '" . $model_controller . "@index');\n";
-        $new_routes .= "\tRoute::get('" . $config['name'] . "/create', '" . $model_controller . "@create');\n";
-        $new_routes .= "\tRoute::post('" . $config['name'] . "/store', '" . $model_controller . "@store');\n";
-        $new_routes .= "\tRoute::get('" . $config['name'] . "/{id}/edit', '" . $model_controller . "@edit');\n";
-        $new_routes .= "\tRoute::post('" . $config['name'] . "/update', '" . $model_controller . "@update');\n";
-        $new_routes .= "\tRoute::post('" . $config['name'] . "/delete', '" . $model_controller . "@delete');\n";
+        $original_content = new Content('web.php', 'routes');
+        $original_content = $original_content->initialize();
 
-        $route_content = self::getContent();
-        $route_content->replace('#routes#', $new_routes);
-        $route_content->save();
+        //read the models
+        $models = ScaffyAssistant::get_models();
+        //get the basic routes stub
+        $content = new Content('stubs/routes.stub');
+        //iterate over them and do
+
+        foreach ($models as $model) {
+            $inner_content = TemplateManager::route_group($model);
+            $content->replace('#routes#', $inner_content . "\n#routes#");
+        }
+
+
+        $original_content->append($content->body);
+        $original_content->save('web');
+
     }
 }

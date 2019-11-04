@@ -36,4 +36,19 @@ class TemplateManager
         $content = str_replace('//local_key', $relation->localKey, $content);
         return $content;
     }
+
+    public static function route_group($model)
+    {
+        $content = Storage::disk('scaffy')->get('stubs/route_group.stub');
+        $content = str_replace('#_name', strtolower($model), $content);
+        $content = str_replace('#_controller', $model . 'Controller', $content);
+        return $content;
+    }
+
+    /*public static function add_additional_routes_to_routes_file(Content $extra_content)
+    {
+        $content = Storage::disk('routes')->get('web.php');
+        $content .= $extra_content->body;
+        return $content;
+    }*/
 }

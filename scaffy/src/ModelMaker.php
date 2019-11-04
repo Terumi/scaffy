@@ -57,7 +57,6 @@ class ModelMaker
                     //todo
                     break;
             }
-            $content->append($relation->relates_to);
         }
         $content->replace("//relations", '');
     }

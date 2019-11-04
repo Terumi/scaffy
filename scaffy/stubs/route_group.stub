@@ -1,0 +1,8 @@
+Route::group(['prefix' => '#_name'], function(){
+    Route::get('/index', '#_controller@index');
+    Route::get('/create', '#_controller@create');
+    Route::post('/store', '#_controller@store');
+    Route::get('/{id}/edit', '#_controller@edit');
+    Route::post('/update', '#_controller@update');
+    Route::post('/delete', '#_controller@delete');
+});

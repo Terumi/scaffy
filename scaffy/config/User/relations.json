@@ -1,0 +1,6 @@
+{
+  "relates_to": "Post",
+  "relationType": "One to Many",
+  "localKey": "id",
+  "foreignKey": "user_id"
+}

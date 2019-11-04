@@ -1,0 +1,6 @@
+{
+  "relates_to": "Comment",
+  "relationType": "One to Many",
+  "localKey": "id",
+  "foreignKey": "post_id"
+}

@@ -13,11 +13,10 @@ class Content
     private $stub;
 
 
-    public function __construct($stub)
+    public function __construct($stub, $disk = 'scaffy')
     {
-        $this->body = Storage::disk('scaffy')->get($stub);
+        $this->body = Storage::disk($disk)->get($stub);
     }
-
 
     public function replace(string $what, string $with)
     {
@@ -37,7 +36,6 @@ class Content
         if ($beginningPos === false || $endPos === false) {
             return $this->body;
         }
-
         $textToDelete = substr($this->body, $beginningPos, ($endPos + strlen($end)) - $beginningPos);
         $this->body = str_replace($textToDelete, '', $this->body);
     }
@@ -45,14 +43,11 @@ class Content
     public function initialize()
     {
         $this->deleteBetween('###start', '###end');
-        $to_be_appeded = is_null($this->stub) ? '' : Storage::disk('stubs')->get($this->stub);
-        Storage::disk($this->disk)->put($this->file, $this->body . $to_be_appeded);
+        return $this;
     }
 
     public function save($name)
     {
         Storage::disk('scaffy')->put("$name.php", $this->body);
     }
-
-
 }
