@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Storage;
 
 class MigrationMaker
 {
-
-
     public static function run()
     {
         //read the models
@@ -20,7 +18,6 @@ class MigrationMaker
 
             $content->replace('DummyClassMigration', $model_config->model_name . "Migration");
             $content->replace('DummyTable', $model_config->table);
-
 
             //get model migration file
             try {
@@ -39,7 +36,6 @@ class MigrationMaker
 
             // lookup for relations
             try {
-
                 $relations = Storage::disk('scaffy')->get('config/' . $model . '/relations.json');
             } catch (Exception $exception) {
                 //save the file
