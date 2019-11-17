@@ -93,10 +93,20 @@ class MakeRelation extends ScaffyCommand
         if (!Storage::disk('scaffy')->exists($file)) {
             Storage::disk('scaffy')->put($file, json_encode($contents));
         } else {
-            $existing_contents[] = json_decode(Storage::disk('scaffy')->get($file), true);
-            $existing_contents[] = $contents;
+            $existing_contents = json_decode(Storage::disk('scaffy')->get($file), true);
 
-            Storage::disk('scaffy')->put($file, json_encode($existing_contents));
+            if (is_array($existing_contents)) {
+                foreach ($existing_contents as $existing_content) {
+                    $new_contents[] = $existing_content;
+                }
+            } else {
+                if (!is_null($existing_contents))
+                    $new_contents[] = $existing_contents;
+            }
+
+            $new_contents[] = $contents;
+
+            Storage::disk('scaffy')->put($file, json_encode($new_contents));
         }
     }
 

@@ -35,6 +35,8 @@ class ModelMaker
             $relations = [$relations];
         };
 
+
+
         foreach ($relations as $relation) {
 
             switch ($relation->relationType) {

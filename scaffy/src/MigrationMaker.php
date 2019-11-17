@@ -13,6 +13,8 @@ class MigrationMaker
         $models = ScaffyAssistant::get_models();
 
         foreach ($models as $model) {
+            echo $model;
+
             $content = new Content('stubs/migration.stub');
             $model_config = ScaffyAssistant::get_model_config_file($model);
 
@@ -23,6 +25,7 @@ class MigrationMaker
             try {
                 $columns = Storage::disk('scaffy')->get('config/' . $model . '/migration.json');
             } catch (Exception $exception) {
+                echo "model $model does not have a migration config file. \n";
                 continue;
             }
 
@@ -40,6 +43,7 @@ class MigrationMaker
             } catch (Exception $exception) {
                 //save the file
                 $content->save($model . "Migration");
+                echo "model $model does not have a relation file. \n";
                 //and exit
                 continue;
             }
