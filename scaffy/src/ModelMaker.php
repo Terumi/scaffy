@@ -35,10 +35,7 @@ class ModelMaker
             $relations = [$relations];
         };
 
-
-
         foreach ($relations as $relation) {
-
             switch ($relation->relationType) {
                 case 'One to One':
                     $with = TemplateManager::relation_one_to_one($relation) . "//relations";

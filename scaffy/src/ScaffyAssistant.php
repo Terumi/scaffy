@@ -69,4 +69,11 @@ class ScaffyAssistant
         $file = Storage::disk('scaffy')->get('config/' . $model . '/' . $file_name);
         return json_decode($file);
     }
+
+    public static function determine_relation_fields($relation)
+    {
+        //todo: make it return an array
+
+        return [];
+    }
 }

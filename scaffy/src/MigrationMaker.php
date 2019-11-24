@@ -13,7 +13,7 @@ class MigrationMaker
         $models = ScaffyAssistant::get_models();
 
         foreach ($models as $model) {
-            echo $model;
+            echo $model . "\n";
 
             $content = new Content('stubs/migration.stub');
             $model_config = ScaffyAssistant::get_model_config_file($model);
@@ -32,8 +32,8 @@ class MigrationMaker
             $migration_config = json_decode($columns);
             $inner_content = '';
             foreach ($migration_config->table->fields as $column) {
+                //attach it
                 $inner_content .= TemplateManager::migration($column);
-                //attach it to a common text
             }
             $content->add($inner_content, '#table_fields#');
 
@@ -42,19 +42,29 @@ class MigrationMaker
                 $relations = Storage::disk('scaffy')->get('config/' . $model . '/relations.json');
             } catch (Exception $exception) {
                 //save the file
-                $content->save($model . "Migration");
+                $content->save($model . "NoRelationMigration");
                 echo "model $model does not have a relation file. \n";
                 //and exit
                 continue;
             }
 
-            //check if something relates to this model
+            //attach relations
+            $relations = json_decode($relations);
+            $relation_content = '';
 
-            //attach text to outer file
 
+            foreach ($relations as $relation) {
+                $relation_fields = ScaffyAssistant::determine_relation_fields($relation);
+                $relation_content .= TemplateManager::relation_in_migration($relation_fields);
+            }
 
-            $content->add('asd', '#table_fields#');
+            //attach it
+            $content->add($relation_content, '#table_fields#');
+            $content->save($model . "Migration");
+
+            //$content->add('asd', '#table_fields#');
         }
+
 
     }
 
@@ -78,7 +88,8 @@ class MigrationMaker
         sleep(1);
     }
 
-    protected static function add_fields_to_migration_file($item, $file_name)
+    protected
+    static function add_fields_to_migration_file($item, $file_name)
     {
         $table_stub = "";
         foreach ($item['fields'] as $field_key => $field) {

@@ -47,9 +47,19 @@ class TemplateManager
 
     public static function migration($column)
     {
-        $content = '$table->' . $column->type . '(\''. $column->name .'\');'. "\n";
+        $content = '$table->' . $column->type . '(\'' . $column->name . '\');' . "\n";
         return $content;
     }
+
+    public static function relation_in_migration($relation)
+    {
+        if (!in_array($relation->relationType, ['belongsTo', 'belongsToMany']))
+            return;
+
+        $content = '$table->' . 'integer' . '(\'' . $relation->localKey . '\');' . "\n";
+        return $content;
+    }
+
 
     /*public static function add_additional_routes_to_routes_file(Content $extra_content)
     {
