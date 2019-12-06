@@ -1,0 +1,1 @@
+[{"relates_to":"User","localKey":"user_id","foreignKey":"id","relationType":"belongsTo"},{"relates_to":"Comment","localKey":"id","foreignKey":"id","relationType":"belongsTo"},{"relates_to":"Comment","localKey":"is","foreignKey":"is","relationType":"belongsTo"},{"relates_to":"Comment","localKey":"user_id","foreignKey":"id","relationType":"belongsTo"}]

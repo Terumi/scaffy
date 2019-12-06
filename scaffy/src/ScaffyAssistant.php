@@ -72,8 +72,13 @@ class ScaffyAssistant
 
     public static function determine_relation_fields($relation)
     {
+        if (count($relation) > 1)
+            die(var_dump($relation));
+
+        echo "------------------\n";
+        
         //todo: make it return an array
 
-        return [];
+        return $relation;
     }
 }

@@ -53,6 +53,9 @@ class TemplateManager
 
     public static function relation_in_migration($relation)
     {
+
+        echo $relation->relationType;
+
         if (!in_array($relation->relationType, ['belongsTo', 'belongsToMany']))
             return;
 

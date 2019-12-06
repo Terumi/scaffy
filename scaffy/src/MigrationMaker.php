@@ -16,56 +16,26 @@ class MigrationMaker
             echo $model . "\n";
 
             $content = new Content('stubs/migration.stub');
-            $model_config = ScaffyAssistant::get_model_config_file($model);
-
-            $content->replace('DummyClassMigration', $model_config->model_name . "Migration");
-            $content->replace('DummyTable', $model_config->table);
+            self::add_names($model, $content);
 
             //get model migration file
-            try {
-                $columns = Storage::disk('scaffy')->get('config/' . $model . '/migration.json');
-            } catch (Exception $exception) {
-                echo "model $model does not have a migration config file. \n";
-                continue;
-            }
+            $columns = self::get_migration_columns($model);
+            if (!$columns)
+                continue; //the model does not have a migration file so, we are good to go.
 
-            $migration_config = json_decode($columns);
-            $inner_content = '';
-            foreach ($migration_config->table->fields as $column) {
-                //attach it
-                $inner_content .= TemplateManager::migration($column);
-            }
-            $content->add($inner_content, '#table_fields#');
+            self::attach_columns($columns, $content);
 
-            // lookup for relations
-            try {
-                $relations = Storage::disk('scaffy')->get('config/' . $model . '/relations.json');
-            } catch (Exception $exception) {
-                //save the file
-                $content->save($model . "NoRelationMigration");
-                echo "model $model does not have a relation file. \n";
-                //and exit
-                continue;
-            }
+            // get the model relation file
+            $relations = self::get_relation_columns($model, $content);
+            if (!$relations)
+                continue; //the model does not have a relations file so, we are good to go.
 
             //attach relations
-            $relations = json_decode($relations);
-            $relation_content = '';
+            self::attach_relations($relations, $content);
 
-
-            foreach ($relations as $relation) {
-                $relation_fields = ScaffyAssistant::determine_relation_fields($relation);
-                $relation_content .= TemplateManager::relation_in_migration($relation_fields);
-            }
-
-            //attach it
-            $content->add($relation_content, '#table_fields#');
+            //save the migration file
             $content->save($model . "Migration");
-
-            //$content->add('asd', '#table_fields#');
         }
-
-
     }
 
     public static function create_migration_file($config)
@@ -118,6 +88,82 @@ class MigrationMaker
         $contents = Storage::disk('migrations')->get($file_name);
         $contents = str_replace('#table_fields#', $table_stub, $contents);
         Storage::disk('migrations')->put($file_name, $contents);
+    }
+
+    /**
+     * @param $model
+     * @param Content $content
+     */
+    protected static function add_names($model, Content $content): void
+    {
+        $model_config = ScaffyAssistant::get_model_config_file($model);
+        $content->replace('DummyClassMigration', $model_config->model_name . "Migration");
+        $content->replace('DummyTable', $model_config->table);
+    }
+
+    /**
+     * @param $model
+     * @return string
+     */
+    protected static function get_migration_columns($model): string
+    {
+        try {
+            $columns = Storage::disk('scaffy')->get('config/' . $model . '/migration.json');
+        } catch (Exception $exception) {
+            echo "model $model does not have a migration config file. \n";
+            $columns = false;
+        }
+        return $columns;
+    }
+
+    /**
+     * @param string $columns
+     * @param Content $content
+     */
+    protected static function attach_columns(string $columns, Content $content): void
+    {
+        $inner_content = '';
+        $migration_config = json_decode($columns);
+        foreach ($migration_config->table->fields as $column) {
+            //attach it
+            $inner_content .= TemplateManager::migration($column);
+        }
+        $content->add($inner_content, '#table_fields#');
+    }
+
+    /**
+     * @param $model
+     * @param Content $content
+     * @return string
+     */
+    protected static function get_relation_columns($model, Content $content): string
+    {
+        try {
+            $relations = Storage::disk('scaffy')->get('config/' . $model . '/relations.json');
+        } catch (Exception $exception) {
+            //save the file
+            $content->save($model . "NoRelationMigration");
+            echo "model $model does not have a relation file. \n";
+            //and exit
+            return false;
+        }
+        return $relations;
+    }
+
+    /**
+     * @param string $relations
+     * @param Content $content
+     */
+    protected static function attach_relations(string $relations, Content $content)
+    {
+        $relations = json_decode($relations);
+        $relation_content = '';
+        foreach ($relations as $relation) {
+            $relation_fields = ScaffyAssistant::determine_relation_fields($relation);
+            if (count($relation_fields))
+                $relation_content .= TemplateManager::relation_in_migration($relation_fields);
+        }
+        $content->add($relation_content, '#table_fields#');
     }
 
     /* public function create_migration_file($key)

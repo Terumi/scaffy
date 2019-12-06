@@ -1,0 +1,14 @@
+{
+  "table": {
+    "fields": [
+      {
+        "name": "id",
+        "type": "increments"
+      },
+      {
+        "name": "comment",
+        "type": "string"
+      }
+    ]
+  }
+}

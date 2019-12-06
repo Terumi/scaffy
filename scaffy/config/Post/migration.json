@@ -1,0 +1,1 @@
+{"table":{"fields":[{"name":"id","type":"increments"},{"name":"title","type":"string"},{"name":"body","type":"text"}]}}
