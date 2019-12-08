@@ -2,80 +2,40 @@
 
 namespace App\Console\Commands;
 
+use ffy\scaffy\ScaffyAssistant;
 use Illuminate\Support\Facades\Storage;
 
 class MakeRelation extends ScaffyCommand
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'scaffy:relation';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
     protected $description = 'Creates all the necessary things for migrations';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return mixed
-     */
     public function handle()
     {
-
-        //which model...
+        // which model...
+        // relates to which one
         $model_one = $this->show_model_options('Which model');
-        //relates to which one?
         $model_two = $this->show_model_options('Relates to which model');
+        // get table names
+        $table_one = ScaffyAssistant::get_model_config_file($model_one)->table;
+        $table_two = ScaffyAssistant::get_model_config_file($model_two)->table;
 
-        $file_one = "config/$model_one/relations.json";
-        $file_two = "config/$model_two/relations.json";
-
-        $contents['relates_to'] = $model_two;
-        $invert_contents['relates_to'] = $model_one;
-
-        //type of relation
-        $relation_types = [
-            'One to One', 'One to Many', 'Many to Many', 'Has One Through', 'Has Many Through'
-        ];
-
-        $relation_type = $this->choice('Type?', $relation_types);
-
-
+        // what is the relation type
+        $relation_type = $this->choice('What is the relation type?', ScaffyAssistant::getRelationTypes());
         switch ($relation_type) {
             case 'One to One':
-                $this->set_keys($contents, $invert_contents);
-                $contents['relationType'] = $relation_type;
-                $invert_contents['relationType'] = 'belongsTo';
-
+                $relation_type_name = "belongsTo";
                 break;
             case 'One to Many':
-                $this->set_keys($contents, $invert_contents);
-                $contents['relationType'] = $relation_type;
-                $invert_contents['relationType'] = 'belongsTo';
-
+                $relation_type_name = "belongsTo";
                 break;
             case 'Many to Many':
-                $contents['pivotTable'] = $this->ask('Pivot Table');
-                $this->set_keys($contents, $invert_contents);
-                $contents['relationType'] = $relation_type;
-                $invert_contents['relationType'] = 'belongsToMany';
-
+                $relation_type_name = "belongsToMany";
                 break;
             case 'Has One Through':
                 //todo
@@ -84,15 +44,59 @@ class MakeRelation extends ScaffyCommand
                 //todo
                 break;
         }
-        $this->save_file($file_one, $contents);
-        $this->save_file($file_two, $invert_contents);
+
+
+        switch ($relation_type) {
+            case "One to One":
+            case "One to Many":
+                $localKey = $this->ask("How to write the foreign key on the $table_two table");
+                $foreignKey = $this->ask("What is the column on $table_one table this refers to");
+
+                $contents['relates_to'] = $model_one;
+                $contents['relates_to_table_name'] = $table_one;
+                $contents['key_written_on_current_table'] = $localKey;
+                $contents['key_on_original_table'] = $foreignKey;
+                $contents['type'] = $relation_type_name;
+                $file = "config/$model_two/relations.json";
+
+                $this->save_file($file, $contents);
+
+                break;
+            case "Many to Many":
+                //return $this->belongsToMany('App\Role', 'role_user', 'user_id', 'role_id');
+                $pivot = $this->ask("What name is the pivot table going to have");
+                $key_one = $this->ask("Which is the key of the $table_one table");
+                $pivot_key_one = $this->ask("How is going to be referenced in the pivot table");
+                $key_two = $this->ask("What is the key of the $table_two table");
+                $pivot_key_two = $this->ask("How is going to be referenced in the pivot table");
+                $contents['model_one'] = $model_one;
+                $contents['model_two'] = $model_two;
+                $contents['table_one'] = $table_one;
+                $contents['table_two'] = $table_two;
+                $contents['pivot'] = $pivot;
+                $contents['key_one'] = $key_one;
+                $contents['key_two'] = $key_two;
+                $contents['pivot_key_one'] = $pivot_key_one;
+                $contents['pivot_key_two'] = $pivot_key_two;
+                $contents['type'] = $relation_type_name;
+
+                $file = "config/$model_one/relations.json";
+                $this->save_file($file, $contents);
+                $file = "config/$model_two/relations.json";
+                $this->save_file($file, $contents);
+
+                break;
+        }
+
     }
 
     protected function save_file(string $file, array $contents): void
     {
         if (!Storage::disk('scaffy')->exists($file)) {
-            Storage::disk('scaffy')->put($file, json_encode($contents));
+            $asd[] = $contents;
+            Storage::disk('scaffy')->put($file, json_encode($asd));
         } else {
+
             $existing_contents = json_decode(Storage::disk('scaffy')->get($file), true);
 
             if (is_array($existing_contents)) {
@@ -108,17 +112,5 @@ class MakeRelation extends ScaffyCommand
 
             Storage::disk('scaffy')->put($file, json_encode($new_contents));
         }
-    }
-
-    /**
-     * @param $contents
-     * @param $invert_contents
-     */
-    protected function set_keys(&$contents, &$invert_contents): void
-    {
-        $contents['localKey'] = $this->ask('First Model ID');
-        $contents['foreignKey'] = $this->ask('Second Model ID');
-        $invert_contents['localKey'] = $contents['foreignKey'];
-        $invert_contents['foreignKey'] = $contents['localKey'];
     }
 }

@@ -15,7 +15,7 @@ class Content
 
     public function __construct($stub, $disk = 'scaffy')
     {
-        $this->body = Storage::disk($disk)->get($stub);
+        $this->body = $stub == '' ? '' : Storage::disk($disk)->get($stub);
     }
 
     public function replace(string $what, string $with)

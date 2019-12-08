@@ -60,6 +60,8 @@ class MakeMigration extends ScaffyCommand
             }
         }
 
+        //todo it fails if you don't add a field
+
         Storage::disk('scaffy')->put($file, json_encode($contents));
         die("ok\n");
     }

@@ -1,0 +1,22 @@
+<?php
+
+class DummyClassMigration extends Migration
+{
+    public function up()
+    {
+        Schema::create('#table_name', function (Blueprint $table) {
+            $table->increments('id');
+            $table->increments('#pivot_key_one');
+            $table->foreign('#pivot_key_one')->references('#key_one')->on('#table_one');
+            $table->increments('#pivot_key_two');
+            $table->foreign('#pivot_key_two')->references('#key_two')->on('#table_two');
+            #table_fields#
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('#table_name');
+    }
+}

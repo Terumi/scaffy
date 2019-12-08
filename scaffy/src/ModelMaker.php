@@ -31,12 +31,45 @@ class ModelMaker
 
     private static function add_relations_to_model(Content &$content, $relations)
     {
+
+        /* todo:
+                for one to one
+                this goes to table_one model
+                    public function phone()
+                    {
+                     return $this->hasOne('App\Phone', 'foreign_key', 'local_key');
+                    }
+
+                and this to table_two
+                    public function user()
+                    {
+                        return $this->belongsTo('App\User', 'foreign_key', 'local_key');
+                    }
+
+                 */
+
+        /* todo:
+        for one to many
+        this is on "Post" table
+            public function comments()
+            {
+                return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
+            }
+
+        and this on "Comment" table:
+            public function post()
+            {
+                return $this->belongsTo('App\Post', 'foreign_key', 'other_key');
+            }
+
+         */
+
         if (!is_array($relations)) {
             $relations = [$relations];
         };
 
         foreach ($relations as $relation) {
-            switch ($relation->relationType) {
+            switch ($relation->type) {
                 case 'One to One':
                     $with = TemplateManager::relation_one_to_one($relation) . "//relations";
                     $content->replace("//relations", $with);

@@ -13,11 +13,10 @@ class MigrationMaker
         $models = ScaffyAssistant::get_models();
 
         foreach ($models as $model) {
-            echo $model . "\n";
+            echo $model . ":\n";
 
             $content = new Content('stubs/migration.stub');
             self::add_names($model, $content);
-
             //get model migration file
             $columns = self::get_migration_columns($model);
             if (!$columns)
@@ -31,10 +30,7 @@ class MigrationMaker
                 continue; //the model does not have a relations file so, we are good to go.
 
             //attach relations
-            self::attach_relations($relations, $content);
-
-            //save the migration file
-            $content->save($model . "Migration");
+            self::attach_relations($model, $relations, $content);
         }
     }
 
@@ -142,7 +138,7 @@ class MigrationMaker
             $relations = Storage::disk('scaffy')->get('config/' . $model . '/relations.json');
         } catch (Exception $exception) {
             //save the file
-            $content->save($model . "NoRelationMigration");
+            $content->save($model . "Migration");
             echo "model $model does not have a relation file. \n";
             //and exit
             return false;
@@ -150,23 +146,61 @@ class MigrationMaker
         return $relations;
     }
 
-    /**
-     * @param string $relations
-     * @param Content $content
-     */
+    protected static function attach_relations(string $model, string $relations, Content $content)
+    {
+        $relations = json_decode($relations);
+
+        $relation_content = '';
+        foreach ($relations as $relation) {
+
+            switch ($relation->type) {
+                case "belongsTo":
+                    $relation_content .= TemplateManager::belongs_to_relation_in_migration($relation);
+                    break;
+                case "belongsToMany":
+                    // no relation columns needed in existing tables
+                    // but we need a new table
+                    self::new_pivot_table($relation);
+                    break;
+                //todo add more relations
+            }
+        }
+
+        $content->add($relation_content, '#table_fields#');
+        //save the migration file
+        $content->save($model . "Migration");
+    }
+
+    private static function new_pivot_table($relation)
+    {
+        $content = new Content('');
+        $content->body = TemplateManager::pivot_quick_table($relation);
+        $content->save($relation->model_one . $relation->model_two . "Migration");
+    }
+
+
+    /*
     protected static function attach_relations(string $relations, Content $content)
     {
         $relations = json_decode($relations);
+
         $relation_content = '';
         foreach ($relations as $relation) {
-            $relation_fields = ScaffyAssistant::determine_relation_fields($relation);
-            if (count($relation_fields))
-                $relation_content .= TemplateManager::relation_in_migration($relation_fields);
+
+            //echo "---------------";
+            //$relation_fields = ScaffyAssistant::determine_relation_fields($relation);
+            //if (count($relation_fields))
+            //    $relation_content .= TemplateManager::relation_in_migration($relation_fields);
+
+            $relation_content .= TemplateManager::relation_in_migration($relation_fields);
+            die(var_dump($relation));
+            die();
+
         }
         $content->add($relation_content, '#table_fields#');
     }
 
-    /* public function create_migration_file($key)
+    public function create_migration_file($key)
      {
          $file_name = $this->create_migration_file($key);
 

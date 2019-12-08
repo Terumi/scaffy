@@ -51,15 +51,37 @@ class TemplateManager
         return $content;
     }
 
-    public static function relation_in_migration($relation)
+    public static function belongs_to_relation_in_migration($relation)
     {
+        $content = "\$table->integer('$relation->key_written_on_current_table');\n";
+        $content .= "\$table->foreign('$relation->key_written_on_current_table')->references('$relation->key_on_original_table')->on('$relation->relates_to_table_name');\n";
+        return $content;
+    }
 
-        echo $relation->relationType;
+    public static function belongs_to_many_relation_in_migration($model, $relation)
+    {
+        if ($relation->model_one == $model) {
+            $content = "\$table->integer('$relation->pivot_key');\n";
+            $content .= "\$table->foreign('$relation->key_written_on_current_table')->references('$relation->key_on_original_table')->on('$relation->relates_to_table_name');\n";
+        } else {
+            $content = "\$table->integer('$relation->key_written_on_current_table');\n";
+            $content .= "\$table->foreign('$relation->key_written_on_current_table')->references('$relation->key_on_original_table')->on('$relation->relates_to_table_name');\n";
+        }
 
-        if (!in_array($relation->relationType, ['belongsTo', 'belongsToMany']))
-            return;
+        return $content;
+    }
 
-        $content = '$table->' . 'integer' . '(\'' . $relation->localKey . '\');' . "\n";
+    public static function pivot_quick_table($relation)
+    {
+        $content = Storage::disk('scaffy')->get('stubs/quick_pivot.stub');
+        $content = str_replace('DummyClass', $relation->model_one . $relation->model_two, $content);
+        $content = str_replace('#table_name', strtolower($relation->pivot), $content);
+        $content = str_replace('#table_one', strtolower($relation->table_one), $content);
+        $content = str_replace('#table_one', strtolower($relation->table_two), $content);
+        $content = str_replace('#pivot_key_one', strtolower($relation->pivot_key_one), $content);
+        $content = str_replace('#key_one', strtolower($relation->key_one), $content);
+        $content = str_replace('#pivot_key_two', strtolower($relation->pivot_key_two), $content);
+        $content = str_replace('#key_two', strtolower($relation->key_two), $content);
         return $content;
     }
 

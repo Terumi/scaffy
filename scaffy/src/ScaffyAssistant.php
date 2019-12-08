@@ -55,6 +55,14 @@ class ScaffyAssistant
         return self::get_file($model, $file_name);
     }
 
+    public static function getRelationTypes()
+    {
+        return [
+            'One to One', 'One to Many', 'Many to Many', 'Has One Through', 'Has Many Through'
+        ];
+    }
+
+
     /**
      * @param $model
      * @param string $file_name
@@ -68,17 +76,5 @@ class ScaffyAssistant
 
         $file = Storage::disk('scaffy')->get('config/' . $model . '/' . $file_name);
         return json_decode($file);
-    }
-
-    public static function determine_relation_fields($relation)
-    {
-        if (count($relation) > 1)
-            die(var_dump($relation));
-
-        echo "------------------\n";
-        
-        //todo: make it return an array
-
-        return $relation;
     }
 }
