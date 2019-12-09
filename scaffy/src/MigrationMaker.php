@@ -154,10 +154,11 @@ class MigrationMaker
         foreach ($relations as $relation) {
 
             switch ($relation->type) {
-                case "belongsTo":
+                case "One to One":
+                case "One to Many":
                     $relation_content .= TemplateManager::belongs_to_relation_in_migration($relation);
                     break;
-                case "belongsToMany":
+                case "Many to Many":
                     // no relation columns needed in existing tables
                     // but we need a new table
                     self::new_pivot_table($relation);

@@ -56,7 +56,7 @@ class MakeRelation extends ScaffyCommand
                 $contents['relates_to_table_name'] = $table_one;
                 $contents['key_written_on_current_table'] = $localKey;
                 $contents['key_on_original_table'] = $foreignKey;
-                $contents['type'] = $relation_type_name;
+                $contents['type'] = $relation_type;
                 $file = "config/$model_two/relations.json";
 
                 $this->save_file($file, $contents);
@@ -78,7 +78,7 @@ class MakeRelation extends ScaffyCommand
                 $contents['key_two'] = $key_two;
                 $contents['pivot_key_one'] = $pivot_key_one;
                 $contents['pivot_key_two'] = $pivot_key_two;
-                $contents['type'] = $relation_type_name;
+                $contents['type'] = $relation_type;
 
                 $file = "config/$model_one/relations.json";
                 $this->save_file($file, $contents);

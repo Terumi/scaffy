@@ -43,9 +43,5 @@ class ScaffyCompiler extends Command
         MigrationMaker::run();
         RouteMaker::run();
         ModelMaker::run();
-
-
-
-
     }
 }

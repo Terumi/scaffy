@@ -19,18 +19,21 @@ class ModelMaker
             $content->replace('_model_name', $model_config->model_name);
             $content->replace('_table_name', $model_config->table);
 
-            $relations = ScaffyAssistant::get_relations_config_file($model);
-            if ($relations) {
-                self::add_relations_to_model($content, $relations);
-            }
             $content->save($model);
         }
+
+        foreach ($models as $model) {
+            self::add_relations_to_model($model);
+        }
+
+
         die();
     }
 
 
-    private static function add_relations_to_model(Content &$content, $relations)
+    private static function add_relations_to_model($model)
     {
+
 
         /* todo:
                 for one to one
@@ -64,23 +67,41 @@ class ModelMaker
 
          */
 
-        if (!is_array($relations)) {
-            $relations = [$relations];
-        };
+        //  if (!is_array($relations)) {
+        //      $relations = [$relations];
+        //  };
+
+        $relations = ScaffyAssistant::get_relations_config_file($model);
 
         foreach ($relations as $relation) {
             switch ($relation->type) {
                 case 'One to One':
-                    $with = TemplateManager::relation_one_to_one($relation) . "//relations";
-                    $content->replace("//relations", $with);
+                    $relation->related_model = $model;
+                    $content = new Content("$relation->relates_to.php");
+                    $content->add(TemplateManager::relation_one_to_one($relation), "//relations");
+                    $content->save($relation->relates_to);
+
+                    //write the inverse belongsTo
+                    $content = new Content("$model.php");
+                    $content->add(TemplateManager::inverse_relation_one_to_one($relation), "//relations");
+                    $content->save($model);
+
                     break;
                 case 'One to Many':
-                    $with = TemplateManager::relation_one_to_many($relation) . "//relations";
-                    $content->replace("//relations", $with);
+                    $relation->related_model = $model;
+                    $content = new Content("$relation->relates_to.php");
+                    $content->add(TemplateManager::relation_one_to_many($relation), '//relations');
+                    $content->save($relation->relates_to);
+
+                    $content = new Content("$model.php");
+                    $content->add(TemplateManager::inverse_relation_one_to_one($relation), "//relations");
+                    $content->save($relation->relates_to);
+
+
                     break;
                 case 'Many to Many':
-                    $with = TemplateManager::relation_many_to_many($relation) . "//relations";
-                    $content->replace("//relations", $with);
+                    continue;
+                    //$content->add(TemplateManager::relation_many_to_many($relation), '//relations');
                     break;
                 case 'Has One Through':
                     //todo
@@ -90,6 +111,6 @@ class ModelMaker
                     break;
             }
         }
-        $content->replace("//relations", '');
+        //$content->replace("//relations", '');
     }
 }

@@ -9,31 +9,31 @@ class TemplateManager
     public static function relation_one_to_one($relation)
     {
         $content = Storage::disk('scaffy')->get('stubs/relations/one_to_one.stub');
-        $content = str_replace('#related_to#', strtolower($relation->relates_to), $content);
-        $content = str_replace('//related_model', 'App\\' . $relation->relates_to, $content);
-        $content = str_replace('//foreign_key', $relation->foreignKey, $content);
-        $content = str_replace('//local_key', $relation->localKey, $content);
+        $content = str_replace('#related_to#', strtolower($relation->related_model), $content);
+        $content = str_replace('//related_model', 'App\\' . $relation->related_model, $content);
+        $content = str_replace('//foreign_key', $relation->key_written_on_current_table, $content);
+        $content = str_replace('//local_key', $relation->key_on_original_table, $content);
         return $content;
     }
 
     public static function relation_one_to_many($relation)
     {
         $content = Storage::disk('scaffy')->get('stubs/relations/one_to_many.stub');
-        $content = str_replace('#related_to#', strtolower($relation->relates_to), $content);
-        $content = str_replace('//related_model', 'App\\' . $relation->relates_to, $content);
-        $content = str_replace('//foreign_key', $relation->foreignKey, $content);
-        $content = str_replace('//local_key', $relation->localKey, $content);
+        $content = str_replace('#related_to#', strtolower($relation->related_model), $content);
+        $content = str_replace('//related_model', 'App\\' . $relation->related_model, $content);
+        $content = str_replace('//foreign_key', $relation->key_written_on_current_table, $content);
+        $content = str_replace('//local_key', $relation->key_on_original_table, $content);
         return $content;
     }
 
     public static function relation_many_to_many($relation)
     {
         $content = Storage::disk('scaffy')->get('stubs/relations/one_to_many.stub');
-        $content = str_replace('#related_to#', strtolower($relation->relates_to), $content);
-        $content = str_replace('//pivot_table', $relation->pivotTable, $content);
-        $content = str_replace('//related_model', 'App\\' . $relation->relates_to, $content);
-        $content = str_replace('//foreign_key', $relation->foreignKey, $content);
-        $content = str_replace('//local_key', $relation->localKey, $content);
+        //$content = str_replace('#related_to#', strtolower($relation->relates_to), $content);
+        //$content = str_replace('//pivot_table', $relation->pivotTable, $content);
+        //$content = str_replace('//related_model', 'App\\' . $relation->relates_to, $content);
+        //$content = str_replace('//foreign_key', $relation->foreignKey, $content);
+        //$content = str_replace('//local_key', $relation->localKey, $content);
         return $content;
     }
 
@@ -82,6 +82,21 @@ class TemplateManager
         $content = str_replace('#key_one', strtolower($relation->key_one), $content);
         $content = str_replace('#pivot_key_two', strtolower($relation->pivot_key_two), $content);
         $content = str_replace('#key_two', strtolower($relation->key_two), $content);
+        return $content;
+    }
+
+    public static function belongs_to_relation_in_model()
+    {
+        $content = Storage::disk('scaffy')->get('stubs/relations/one_to_one.stub');
+    }
+
+    public static function inverse_relation_one_to_one($relation)
+    {
+        $content = Storage::disk('scaffy')->get('stubs/relations/inverse_one_to_one.stub');
+        $content = str_replace('#related_to#', strtolower($relation->relates_to), $content);
+        $content = str_replace('//related_model', 'App\\' . $relation->relates_to, $content);
+        $content = str_replace('//foreign_key', $relation->key_on_original_table, $content);
+        $content = str_replace('//local_key', $relation->key_written_on_current_table, $content);
         return $content;
     }
 
