@@ -3,3 +3,18 @@ public function #related_to#()
     return $this->hasMany('//related_model', '//foreign_key', '//local_key');
 }
 
+
+/* todo:
+for one to many
+this is on "Post" table
+public function comments()
+{
+return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
+}
+
+and this on "Comment" table:
+public function post()
+{
+return $this->belongsTo('App\Post', 'foreign_key', 'other_key');
+}
+*/

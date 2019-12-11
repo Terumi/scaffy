@@ -1,0 +1,4 @@
+public function #relates_to()
+{
+    return $this->belongsTo('App\#relates_to', '#foreign_key', '#local_key');
+}

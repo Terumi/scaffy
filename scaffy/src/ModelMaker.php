@@ -23,79 +23,47 @@ class ModelMaker
         }
 
         foreach ($models as $model) {
+            echo $model;
+            echo "\n";
             self::add_relations_to_model($model);
+            echo "-------------------------------------\n";
+
         }
-
-
-        die();
     }
 
 
     private static function add_relations_to_model($model)
     {
 
-
-        /* todo:
-                for one to one
-                this goes to table_one model
-                    public function phone()
-                    {
-                     return $this->hasOne('App\Phone', 'foreign_key', 'local_key');
-                    }
-
-                and this to table_two
-                    public function user()
-                    {
-                        return $this->belongsTo('App\User', 'foreign_key', 'local_key');
-                    }
-
-                 */
-
-        /* todo:
-        for one to many
-        this is on "Post" table
-            public function comments()
-            {
-                return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
-            }
-
-        and this on "Comment" table:
-            public function post()
-            {
-                return $this->belongsTo('App\Post', 'foreign_key', 'other_key');
-            }
-
-         */
-
         //  if (!is_array($relations)) {
         //      $relations = [$relations];
         //  };
 
         $relations = ScaffyAssistant::get_relations_config_file($model);
+        $content = new Content("$model.php");
 
         foreach ($relations as $relation) {
             switch ($relation->type) {
                 case 'One to One':
-                    $relation->related_model = $model;
-                    $content = new Content("$relation->relates_to.php");
-                    $content->add(TemplateManager::relation_one_to_one($relation), "//relations");
-                    $content->save($relation->relates_to);
+                    //$relation->related_model = $model;
+                    //$content = new Content("$relation->relates_to.php");
+                    //$content->add(TemplateManager::relation_one_to_one($relation), "//relations");
+                    //$content->save($relation->relates_to);
 
                     //write the inverse belongsTo
-                    $content = new Content("$model.php");
-                    $content->add(TemplateManager::inverse_relation_one_to_one($relation), "//relations");
-                    $content->save($model);
+                    //$content = new Content("$model.php");
+                    //$content->add(TemplateManager::inverse_relation_one_to_one($relation), "//relations");
+                    //$content->save($model);
 
                     break;
                 case 'One to Many':
-                    $relation->related_model = $model;
-                    $content = new Content("$relation->relates_to.php");
-                    $content->add(TemplateManager::relation_one_to_many($relation), '//relations');
-                    $content->save($relation->relates_to);
+                    //$content = new Content("$relation->relates_to.php");
+                    $content->add(TemplateManager::belongs_to_relation_in_model($relation), '//relations');
+                    //$content->save($relation->relates_to);
 
-                    $content = new Content("$model.php");
-                    $content->add(TemplateManager::inverse_relation_one_to_one($relation), "//relations");
-                    $content->save($relation->relates_to);
+                    //$content = new Content("$model.php");
+                    //$content->add(TemplateManager::inverse_relation_one_to_one($relation), "//relations");
+                    //$content->save($relation->relates_to);
 
 
                     break;
@@ -110,6 +78,8 @@ class ModelMaker
                     //todo
                     break;
             }
+            $content->save($model);
+
         }
         //$content->replace("//relations", '');
     }

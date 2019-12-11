@@ -55,4 +55,9 @@ class Content
     {
         Storage::disk('scaffy')->put("$name.php", $this->body);
     }
+
+    public function __toString()
+    {
+        return $this->body;
+    }
 }
