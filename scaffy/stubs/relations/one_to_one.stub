@@ -2,20 +2,3 @@ public function #related_to#()
 {
     return $this->hasOne('//related_model', '//foreign_key', '//local_key');
 }
-
-
-/* todo:
-for one to one
-this goes to table_one model
-public function phone()
-{
-return $this->hasOne('App\Phone', 'foreign_key', 'local_key');
-}
-
-and this to table_two
-public function user()
-{
-return $this->belongsTo('App\User', 'foreign_key', 'local_key');
-}
-
-*/

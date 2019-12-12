@@ -26,16 +26,6 @@ class TemplateManager
         return $content;
     }
 
-    public static function relation_many_to_many($relation)
-    {
-        $content = Storage::disk('scaffy')->get('stubs/relations/one_to_many.stub');
-        //$content = str_replace('#related_to#', strtolower($relation->relates_to), $content);
-        //$content = str_replace('//pivot_table', $relation->pivotTable, $content);
-        //$content = str_replace('//related_model', 'App\\' . $relation->relates_to, $content);
-        //$content = str_replace('//foreign_key', $relation->foreignKey, $content);
-        //$content = str_replace('//local_key', $relation->localKey, $content);
-        return $content;
-    }
 
     public static function route_group($model)
     {
@@ -119,6 +109,24 @@ class TemplateManager
             $content->replace('#foreign_key', $relation->key_on_original_table);
             $content->replace('#local_key', $relation->key_written_on_current_table);
         }
+        return $content;
+    }
+
+
+    public static function many_to_many($model, $relation)
+    {
+        $inverted = false;
+
+        if ($model == $relation->model_two)
+            $inverted = true;
+
+        $content = new Content('stubs/relations/many_to_many.stub');
+        $content->replace('#model_one', $inverted ? strtolower($relation->model_one) . 's' : strtolower($relation->model_two) . 's');
+        $content->replace('#model_two', $inverted ? $relation->model_one : $relation->model_two);
+        $content->replace('#pivot', $relation->pivot);
+        $content->replace('#foreign_key', $inverted ? $relation->pivot_key_two : $relation->pivot_key_one);
+        $content->replace('#local_key', $inverted ? $relation->pivot_key_one : $relation->pivot_key_two);
+
         return $content;
     }
 

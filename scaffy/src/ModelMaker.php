@@ -65,8 +65,9 @@ class ModelMaker
 
                     break;
                 case 'Many to Many':
-                    continue;
-                    //$content->add(TemplateManager::relation_many_to_many($relation), '//relations');
+
+                    $content->add(TemplateManager::many_to_many($model, $relation), '//relations');
+
                     break;
                 case 'Has One Through':
                     //todo

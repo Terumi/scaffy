@@ -1,5 +1,4 @@
-public function #related_to#()
+public function #model_one()
 {
-    return $this->belongsToMany('//related_model', '//pivot_table',  '//local_key', '//foreign_key');
+    return $this->belongsToMany('#model_two', '#pivot',  '#local_key', '#foreign_key');
 }
-
