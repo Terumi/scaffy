@@ -7,10 +7,6 @@ public function #related_to#()
 /* todo:
 for one to many
 this is on "Post" table
-public function comments()
-{
-return $this->hasMany('App\Comment', 'foreign_key', 'local_key');
-}
 
 and this on "Comment" table:
 public function post()

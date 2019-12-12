@@ -85,12 +85,40 @@ class TemplateManager
         return $content;
     }
 
-    public static function belongs_to_relation_in_model($relation)
+    public static function belongs_to($relation)
     {
         $content = new Content('stubs/relations/belongs_to.stub');
         $content->replace('#relates_to', $relation->relates_to);
         $content->replace('#foreign_key', $relation->key_written_on_current_table);
         $content->replace('#local_key', $relation->key_on_original_table);
+        return $content;
+    }
+
+    public static function has_many($model, $relation)
+    {
+        $content = new Content('stubs/relations/has_many.stub');
+        $content->replace('#function_name', strtolower($model) . 's');
+        $content->replace('#model', $model);
+        $content->replace('#foreign_key', $relation->key_written_on_current_table);
+        $content->replace('#local_key', $relation->key_on_original_table);
+        return $content;
+    }
+
+    public static function has_one($relation, $model = null, $inverted = false)
+    {
+        $content = new Content('stubs/relations/has_one.stub');
+
+        if ($inverted) {
+            $content->replace('#function_name', strtolower($model));
+            $content->replace('#model', $model);
+            $content->replace('#foreign_key', $relation->key_written_on_current_table);
+            $content->replace('#local_key', $relation->key_on_original_table);
+        } else {
+            $content->replace('#function_name', strtolower($relation->relates_to));
+            $content->replace('#model', $relation->relates_to);
+            $content->replace('#foreign_key', $relation->key_on_original_table);
+            $content->replace('#local_key', $relation->key_written_on_current_table);
+        }
         return $content;
     }
 

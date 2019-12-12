@@ -1,0 +1,4 @@
+public function #function_name()
+{
+    return $this->hasOne('App\#model', '#foreign_key', '#local_key');
+}

@@ -40,31 +40,28 @@ class ModelMaker
         //  };
 
         $relations = ScaffyAssistant::get_relations_config_file($model);
+
+        if (!$relations)
+            return;
+
         $content = new Content("$model.php");
 
         foreach ($relations as $relation) {
             switch ($relation->type) {
                 case 'One to One':
-                    //$relation->related_model = $model;
-                    //$content = new Content("$relation->relates_to.php");
-                    //$content->add(TemplateManager::relation_one_to_one($relation), "//relations");
-                    //$content->save($relation->relates_to);
+                    $content->add(TemplateManager::has_one($relation), '//relations');
 
-                    //write the inverse belongsTo
-                    //$content = new Content("$model.php");
-                    //$content->add(TemplateManager::inverse_relation_one_to_one($relation), "//relations");
-                    //$content->save($model);
+                    $invert_content = new Content($relation->relates_to . ".php");
+                    $invert_content->add(TemplateManager::has_one($relation, $model, true), '//relations');
+                    $invert_content->save($relation->relates_to);
 
                     break;
                 case 'One to Many':
                     //$content = new Content("$relation->relates_to.php");
-                    $content->add(TemplateManager::belongs_to_relation_in_model($relation), '//relations');
-                    //$content->save($relation->relates_to);
-
-                    //$content = new Content("$model.php");
-                    //$content->add(TemplateManager::inverse_relation_one_to_one($relation), "//relations");
-                    //$content->save($relation->relates_to);
-
+                    $content->add(TemplateManager::belongs_to($relation), '//relations');
+                    $invert_content = new Content($relation->relates_to . ".php");
+                    $invert_content->add(TemplateManager::has_many($model, $relation), '//relations');
+                    $invert_content->save($relation->relates_to);
 
                     break;
                 case 'Many to Many':
